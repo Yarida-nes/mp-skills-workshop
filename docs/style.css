@@ -87,10 +87,28 @@ code { font-family: var(--mono); font-size: .88em; background: var(--river-soft)
 /* Commands with copy buttons */
 .cmd { display: flex; flex-direction: column; background: var(--code-bg); color: var(--code-fg); border-radius: 12px; min-width: 0; }
 .cmd pre { margin: 0; padding: .3rem 1rem .85rem; overflow-x: auto; font: 400 .88rem/1.6 var(--mono); white-space: pre; }
+.cmd.prose pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 .cmd .label { display: block; font: 600 .7rem var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--code-label); padding: 0 1rem .2rem; margin-top: -1.6rem; max-width: calc(100% - 5rem); }
 .cmd .copy { order: -1; align-self: flex-end; margin: .45rem .45rem 0 0; font: 600 .78rem var(--body); background: transparent; color: var(--code-fg); border: 1px solid #ffffff40; border-radius: 999px; padding: .3rem .7rem; cursor: pointer; }
 .cmd .copy:hover { border-color: var(--cta); color: var(--cta); }
 
+/* Numbered steps, and tap-to-open "What does this do?" notes */
+ol.steps { list-style: none; margin: 0; padding: 1.5rem 0 0; display: grid; gap: 1.6rem; counter-reset: step; }
+ol.steps > li { display: grid; grid-template-columns: 2.2rem 1fr; gap: .8rem; counter-increment: step; }
+ol.steps > li::before { content: counter(step); font: 700 1.05rem var(--display); width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; background: var(--river-soft); color: var(--river); }
+.step { display: grid; gap: .55rem; min-width: 0; }
+.step h2 { font-size: 1.2rem; }
+.step > p { color: var(--muted); }
+.done { margin-block: 2rem 3rem; padding: 1.1rem 1.2rem; border-radius: 12px; background: var(--river-soft); display: grid; gap: .4rem; }
+.done h2 { font-size: 1.2rem; }
+.why { font-size: .95rem; }
+.why summary { cursor: pointer; color: var(--river); font-weight: 600; width: fit-content; padding-block: .1rem; }
+.why dl { margin: .5rem 0 0; padding: .9rem 1rem; border-left: 3px solid var(--cta); background: var(--surface); border-radius: 0 10px 10px 0; display: grid; gap: .25rem; }
+.why dt { font-weight: 600; color: var(--ink); }
+.why dt:not(:first-child) { margin-top: .55rem; }
+.why dd { margin: 0; color: var(--muted); }
+
+.note { margin-top: 1.5rem; padding: .7rem 1rem; border-radius: 10px; background: var(--river-soft); font-size: .95rem; }
 .site-foot { margin-top: 3rem; background: var(--band); color: var(--band-muted); font-size: .85rem; }
 .site-foot .wrap { padding-block: 1.6rem; display: flex; gap: .5rem 1.5rem; flex-wrap: wrap; justify-content: space-between; }
 .site-foot a { color: var(--band-ai); }
