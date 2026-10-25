@@ -7,20 +7,38 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="icon" type="image/png" sizes="32x32" href="brand/favicon-32.png">
 <link rel="stylesheet" href="style.css">
 <script src="qrcode.js"></script>
 <style>
-/* Layout: one slide fills whatever box it gets (full screen or half beside the agent), sized from the container, with a timer and progress strip pinned to its edges. */
+/* Layout: one slide fills whatever box it gets (full screen or half beside the agent), sized from the container, with a timer and progress strip pinned to its edges.
+   The deck commits to the Perth AI navy in every theme, the way the brand reads on a projector. */
+:root:root:root {
+  --paper: #0b132b; --surface: #141f3d; --ink: #ffffff; --muted: #c4c8d4; --line: #232f52;
+  --river: #29ccff; --river-soft: #10294a; --sun: #ff9e2c; --sun-soft: #33240f; --alarm: #ff6b8a;
+  --code-bg: #050a17; --band: #0b132b;
+  color-scheme: dark;
+}
 html, body { height: 100%; }
-body { overflow: hidden; }
+body { overflow: hidden; background: var(--paper); }
+.deck::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 50% at 100% 0%, #ff9e2c26, transparent 70%), linear-gradient(160deg, #ff6b8a1f, #6924e01a 45%, #009bcc26); pointer-events: none; }
+.deck > * { position: relative; }
+.skyline { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: auto; max-width: none; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.deck > .top, .deck > .stage, .deck > .bottom { z-index: 1; }
+.deck.scenic .skyline { opacity: .85; }
+.fade { position: absolute; inset: 0; background: linear-gradient(to bottom, #0b132b 30%, #0b132b99 70%, #0b132bcc); pointer-events: none; opacity: 0; transition: opacity .4s; }
+.deck.scenic .fade { opacity: 1; }
+.top .logo { display: flex; align-items: center; gap: .55em; color: var(--ink); text-decoration: none; font: 700 clamp(.9rem, 2.6cqmin, 1.25rem) var(--display); }
+.top .logo img { width: 1.9em; height: 1.9em; }
+.top .logo span span { color: var(--river); }
 .deck { position: fixed; inset: 0; container-type: size; display: grid; grid-template-rows: auto 1fr auto; }
 .top, .bottom { display: flex; align-items: center; gap: 1rem; padding-block: max(10px, env(safe-area-inset-top, 0px)) 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); font: 500 clamp(.75rem, 2.2cqmin, 1rem) var(--mono); color: var(--muted); }
 .bottom { padding-block: 10px max(10px, env(safe-area-inset-bottom, 0px)); }
-.top .where { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top .where { flex: 1; min-width: 0; display: flex; }
 
 .timer { font: 600 clamp(1rem, 4.5cqmin, 2.2rem) var(--mono); font-variant-numeric: tabular-nums; border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; padding: .15em .55em; cursor: pointer; }
-.timer.running { border-color: var(--river); }
+.timer.running { border-color: var(--river); color: var(--river); }
 .timer.low { border-color: var(--sun); color: var(--sun); }
 .timer.over { border-color: var(--alarm); color: var(--alarm); }
 .timer[hidden] { display: none; }
@@ -31,15 +49,16 @@ body { overflow: hidden; }
 @media (prefers-reduced-motion: no-preference) { .slide.on { animation: rise .35s ease-out; } }
 @keyframes rise { from { transform: translateY(12px); opacity: .4; } to { transform: none; opacity: 1; } }
 
-.kicker { font: 500 clamp(.8rem, 2.6cqmin, 1.25rem) var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--sun); }
-.say { font: 800 clamp(2rem, 9cqmin, 6rem)/1.02 var(--display); letter-spacing: -.025em; text-wrap: balance; }
+.kicker { font: 600 clamp(.8rem, 2.4cqmin, 1.15rem) var(--body); letter-spacing: .16em; text-transform: uppercase; color: var(--sun); }
+.say { font: 700 clamp(2rem, 9cqmin, 6rem)/1.04 var(--display); letter-spacing: -.03em; text-wrap: balance; }
 .say em { font-style: normal; color: var(--river); }
 .sub { font-size: clamp(1rem, 3.4cqmin, 1.9rem); color: var(--muted); max-width: 34em; text-wrap: pretty; }
 .prompt { background: var(--code-bg); color: var(--code-fg); border-radius: 12px; padding: .8em 1em; font: 400 clamp(.85rem, 2.7cqmin, 1.45rem)/1.5 var(--mono); max-width: 46em; white-space: pre-wrap; }
-.prompt b { color: #7fd0e8; font-weight: 500; }
+.prompt b { color: #5cd8ff; font-weight: 500; }
+.prompt { border: 1px solid var(--line); }
 
 .loop { display: flex; flex-wrap: wrap; gap: .5em; font: 700 clamp(1rem, 3.6cqmin, 2rem) var(--display); }
-.loop span { padding: .3em .7em; border-radius: 999px; background: var(--river-soft); color: var(--river); }
+.loop span { padding: .3em .75em; border-radius: 999px; background: var(--cta); color: var(--cta-ink); }
 .loop i { font-style: normal; color: var(--muted); align-self: center; }
 
 .split { display: grid; grid-template-columns: auto 1fr; gap: 4cqmin; align-items: center; }
@@ -56,7 +75,7 @@ body { overflow: hidden; }
 
 .dots { display: flex; gap: 6px; flex: 1; flex-wrap: wrap; }
 .dots button { width: clamp(8px, 1.6cqmin, 14px); height: clamp(8px, 1.6cqmin, 14px); border-radius: 50%; border: 0; padding: 0; background: var(--line); cursor: pointer; }
-.dots button[aria-current="true"] { background: var(--river); }
+.dots button[aria-current="true"] { background: var(--cta); }
 .keys { white-space: nowrap; }
 @container (max-width: 40rem) { .keys { display: none; } }
 </style>
@@ -64,13 +83,15 @@ body { overflow: hidden; }
 <body>
 <div class="deck">
   <div class="top">
-    <span class="where" id="where">Perth AI · Skills Night · Part 2</span>
+    <span class="where" id="where"><span class="logo"><img src="brand/perth-ai-mark.webp" alt="" width="256" height="256"><span>PERTH <span>AI</span></span></span></span>
     <span id="clock" aria-label="Current time"></span>
     <button class="timer" id="timer" type="button" title="Start or pause the timer (T). Reset with R." hidden>00:00</button>
   </div>
 
+  <img class="skyline" src="brand/perth-skyline.webp" alt="" width="1600" height="578">
+  <div class="fade"></div>
   <div class="stage" id="stage">
-    <section class="slide" data-name="setup">
+    <section class="slide" data-name="setup" data-scenic>
       <p class="kicker">5:30 pm · while we get going</p>
       <div class="split">
         <div class="qr" data-qr="install"></div>
@@ -82,7 +103,7 @@ body { overflow: hidden; }
       </div>
     </section>
 
-    <section class="slide" data-name="part2">
+    <section class="slide" data-name="part2" data-scenic>
       <p class="kicker">Part 2 · Mash</p>
       <p class="say">The codebase is clean. <em>Now they want features.</em></p>
     </section>
@@ -166,7 +187,7 @@ body { overflow: hidden; }
       <p class="sub">Read the evidence, fix what matters, merge. Then <b>/retro</b> to improve the next run.</p>
     </section>
 
-    <section class="slide" data-name="showtell">
+    <section class="slide" data-name="showtell" data-scenic>
       <p class="kicker">8:30 pm · Q&amp;A, then show and tell</p>
       <div class="split">
         <div class="qr" data-qr="skills"></div>
@@ -204,7 +225,7 @@ body { overflow: hidden; }
     var n = qr.getModuleCount();
     var path = '';
     for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (qr.isDark(r, c)) path += 'M' + c + ' ' + r + 'h1v1h-1z';
-    box.innerHTML = '<svg viewBox="0 0 ' + n + ' ' + n + '" shape-rendering="crispEdges" role="img" aria-label="QR code for ' + links[box.dataset.qr] + '"><path fill="#0f1d26" d="' + path + '"/></svg>';
+    box.innerHTML = '<svg viewBox="0 0 ' + n + ' ' + n + '" shape-rendering="crispEdges" role="img" aria-label="QR code for ' + links[box.dataset.qr] + '"><path fill="#0b132b" d="' + path + '"/></svg>';
   });
   document.querySelectorAll('[data-url]').forEach(function (el) { el.textContent = links[el.dataset.url].replace('https://', ''); });
 
@@ -258,6 +279,7 @@ body { overflow: hidden; }
     slides.forEach(function (s, n) { s.classList.toggle('on', n === current); });
     Array.prototype.forEach.call(dots.children, function (d, n) { d.setAttribute('aria-current', String(n === current)); });
     count.textContent = (current + 1) + ' / ' + slides.length;
+    document.querySelector('.deck').classList.toggle('scenic', slides[current].hasAttribute('data-scenic'));
     plan = (Number(slides[current].dataset.minutes) || 0) * 60;
     timerEl.hidden = !plan;
     resetTimer();

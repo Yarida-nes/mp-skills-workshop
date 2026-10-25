@@ -8,13 +8,12 @@
 <meta name="description" content="Install Matt Pocock's skills and get the workshop shop running.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="icon" type="image/png" sizes="32x32" href="brand/favicon-32.png">
+<link rel="apple-touch-icon" href="brand/apple-touch-icon.png">
 <link rel="stylesheet" href="style.css">
 <style>
 /* Layout: one narrow column of numbered steps, readable on a phone held in one hand. */
-.hero { padding-block: 2rem 1rem; display: grid; gap: .6rem; }
-.hero h1 { font-size: clamp(2rem, 8vw, 2.8rem); font-weight: 800; letter-spacing: -.02em; }
-.hero p.lede { font-size: 1.1rem; color: var(--muted); }
 .tabs { display: flex; gap: .25rem; border-bottom: 1px solid var(--line); margin-top: 1rem; }
 .tabs button { flex: 1; font: 600 1rem var(--body); background: none; border: 0; border-bottom: 3px solid transparent; color: var(--muted); padding: .7rem .5rem; cursor: pointer; }
 .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--river); }
@@ -24,7 +23,6 @@ ol.steps > li::before { content: counter(step); font: 700 1.05rem var(--display)
 .step { display: grid; gap: .55rem; min-width: 0; }
 .step h2 { font-size: 1.2rem; }
 .step > p { color: var(--muted); }
-.big-link { display: inline-block; justify-self: start; background: var(--river); color: var(--surface); text-decoration: none; font-weight: 600; padding: .65rem 1rem; border-radius: 8px; }
 .done { margin-block: 2rem 3rem; padding: 1.1rem 1.2rem; border-radius: 12px; background: var(--river-soft); display: grid; gap: .4rem; }
 .done h2 { font-size: 1.2rem; }
 </style>
@@ -32,7 +30,7 @@ ol.steps > li::before { content: counter(step); font: 700 1.05rem var(--display)
 <body>
 <header class="bar">
   <div class="wrap">
-    <a class="brand" href="./">Perth AI <span>·</span> Skills Night</a>
+    <a class="logo" href="./"><img src="brand/perth-ai-mark.webp" alt="" width="256" height="256"><span class="word">PERTH <span>AI</span></span><span class="event">Skills Night</span></a>
     <nav aria-label="Pages">
       <a href="./" aria-current="page">Setup</a>
       <a href="skills.html">Skills</a>
@@ -40,12 +38,16 @@ ol.steps > li::before { content: counter(step); font: 700 1.05rem var(--display)
   </div>
 </header>
 
-<main class="wrap">
-  <div class="hero">
+<div class="band">
+  <img class="skyline" src="brand/perth-skyline.webp" alt="" width="1600" height="578">
+  <div class="wrap">
     <p class="eyebrow">Matt Pocock skills · Part 2</p>
     <h1>Get set up</h1>
     <p class="lede">Work down the list. Skip anything you already have. Stuck? Put your hand up.</p>
   </div>
+</div>
+
+<main class="wrap">
 
   <div class="tabs" role="tablist" aria-label="Your computer">
     <button role="tab" id="tab-win" aria-controls="os-win" aria-selected="true" type="button" data-os="win">Windows</button>
@@ -113,7 +115,7 @@ copilot plugin install mattpocock-skills@mattpocock</pre></div>
     </div></li>
 
     <li><div class="step"><h2>Make your own copy of the shop</h2>
-      <a class="big-link" href="https://github.com/new?template_name=perth-ai-mp-new-features&amp;template_owner=mashjprime" target="_blank" rel="noopener">Create my copy on GitHub</a>
+      <a class="cta" href="https://github.com/new?template_name=perth-ai-mp-new-features&amp;template_owner=mashjprime" target="_blank" rel="noopener">Create my copy on GitHub</a>
       <p>Then clone it. Swap in your GitHub name and the name you gave the repo.</p>
       <div class="cmd"><pre>gh auth login
 gh repo clone YOUR-NAME/YOUR-REPO
@@ -148,6 +150,14 @@ npm run dev</pre></div>
     <p class="muted">Next: <a href="skills.html">what each skill does, and the order to use them</a>.</p>
   </div>
 </main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span>Perth AI · Western Australia's community for people building with AI.</span>
+    <a href="https://perthai.org" target="_blank" rel="noopener">perthai.org</a>
+  </div>
+</footer>
+
 
 <script src="copy.js"></script>
 <script>
