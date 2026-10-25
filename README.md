@@ -35,7 +35,7 @@ cd python-eshop/backend && uv run pytest
 
 ## What's here for the review step
 
-- [`CLAUDE.md`](CLAUDE.md): project context your agent loads every session.
+- [`AGENTS.md`](AGENTS.md): project context your agent loads every session (Codex, Cursor, Copilot and others read it; `CLAUDE.md` points Claude Code at it).
 - [`REVIEW.md`](REVIEW.md): what a reviewer, human or `/code-review`, should care about in this repo.
 - [`.github/pull_request_template.md`](.github/pull_request_template.md): every PR says how it was tested, how risky it is and how to revert it.
 

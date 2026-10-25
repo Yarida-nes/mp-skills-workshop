@@ -73,16 +73,43 @@ curl -LsSf https://astral.sh/uv/install.sh | sh</pre></div>
       <p>You don't need to install Python. uv fetches the right version for you.</p>
     </div></li>
 
-    <li><div class="step"><h2>Install Claude Code</h2>
-      <div class="cmd" data-os-cmd="win" hidden><pre>irm https://claude.ai/install.ps1 | iex</pre></div>
-      <div class="cmd" data-os-cmd="mac linux"><pre>curl -fsSL https://claude.ai/install.sh | bash</pre></div>
-      <p>Run <code>claude</code> once and sign in. Already using Copilot, Codex or Cursor? Keep it and skip this step.</p>
+    <li><div class="step"><h2>Pick your coding agent</h2>
+      <p>Any of these works tonight. Already have one? Pick it and skip the install.</p>
+      <div class="tabs" role="tablist" aria-label="Your coding agent">
+        <button role="tab" id="agent-claude" aria-controls="agent-panel" aria-selected="true" type="button" data-agent="claude">Claude Code</button>
+        <button role="tab" id="agent-codex" aria-controls="agent-panel" aria-selected="false" type="button" data-agent="codex">Codex</button>
+        <button role="tab" id="agent-copilot" aria-controls="agent-panel" aria-selected="false" type="button" data-agent="copilot">Copilot</button>
+        <button role="tab" id="agent-other" aria-controls="agent-panel" aria-selected="false" type="button" data-agent="other">Others</button>
+      </div>
+      <div id="agent-panel" class="step">
+        <div class="step" data-agent-panel="claude">
+          <div class="cmd" data-os-cmd="win" hidden><pre>irm https://claude.ai/install.ps1 | iex</pre></div>
+          <div class="cmd" data-os-cmd="mac linux"><pre>curl -fsSL https://claude.ai/install.sh | bash</pre></div>
+          <p>Run <code>claude</code> once and sign in.</p>
+        </div>
+        <div class="step" data-agent-panel="codex" hidden>
+          <div class="cmd"><pre>npm install -g @openai/codex</pre></div>
+          <p>Run <code>codex</code> once and sign in.</p>
+        </div>
+        <div class="step" data-agent-panel="copilot" hidden>
+          <div class="cmd"><pre>npm install -g @github/copilot</pre></div>
+          <p>Run <code>copilot</code> once and sign in with GitHub. You need a Copilot plan; the free one is fine.</p>
+        </div>
+        <div class="step" data-agent-panel="other" hidden>
+          <p>Install Cursor, Windsurf or OpenCode from its own website and open a terminal inside it.</p>
+        </div>
+      </div>
     </div></li>
 
     <li><div class="step"><h2>Install the skills</h2>
-      <div class="cmd"><span class="label">Claude Code</span><pre>claude plugin install mattpocock-skills@claude-plugins-official</pre></div>
-      <div class="cmd"><span class="label">Any other agent</span><pre>npx skills@latest add mattpocock/skills</pre></div>
-      <p>Use one or the other. Doing both installs every skill twice.</p>
+      <div class="cmd" data-agent-panel="claude"><pre>claude plugin install mattpocock-skills@claude-plugins-official</pre></div>
+      <div class="cmd" data-agent-panel="codex" hidden><pre>codex plugin marketplace add mattpocock/skills
+codex plugin add mattpocock-skills@mattpocock</pre></div>
+      <div class="cmd" data-agent-panel="copilot" hidden><pre>copilot plugin marketplace add mattpocock/skills
+copilot plugin install mattpocock-skills@mattpocock</pre></div>
+      <div class="cmd" data-agent-panel="other" hidden><pre>npx skills@latest add mattpocock/skills</pre></div>
+      <p data-agent-panel="other" hidden>It asks which agent to install for. These are plain files you can edit; update them later with <code>npx skills@latest update</code>.</p>
+      <p>Use one install method per agent. Doing two installs every skill twice.</p>
     </div></li>
 
     <li><div class="step"><h2>Make your own copy of the shop</h2>
@@ -94,8 +121,14 @@ cd YOUR-REPO</pre></div>
     </div></li>
 
     <li><div class="step"><h2>Set up the skills in your copy</h2>
-      <div class="cmd"><pre>claude
+      <p>Start your agent in the repo folder, then run the setup skill.</p>
+      <div class="cmd" data-agent-panel="claude"><pre>claude
 /setup-matt-pocock-skills</pre></div>
+      <div class="cmd" data-agent-panel="codex" hidden><pre>codex
+Use the setup-matt-pocock-skills skill</pre></div>
+      <div class="cmd" data-agent-panel="copilot" hidden><pre>copilot
+/setup-matt-pocock-skills</pre></div>
+      <div class="cmd" data-agent-panel="other" hidden><pre>Use the setup-matt-pocock-skills skill</pre></div>
       <p>When it asks where issues go, pick GitHub if <code>gh</code> is signed in. Otherwise pick local files.</p>
     </div></li>
 
@@ -119,14 +152,25 @@ npm run dev</pre></div>
 <script src="copy.js"></script>
 <script>
 (function () {
-  var tabs = document.querySelectorAll('[role=tab]');
+  var tabs = document.querySelectorAll('[data-os]');
   function showOs(os) {
     tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.os === os)); });
     document.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.dataset.panel !== os; });
     document.querySelectorAll('[data-os-cmd]').forEach(function (c) { c.hidden = c.dataset.osCmd.split(' ').indexOf(os) < 0; });
     try { localStorage.setItem('os', os); } catch (e) {}
   }
-  tabs.forEach(function (t) { t.addEventListener('click', function () { showOs(t.dataset.os); }); });
+  tabs.forEach(function (t) { if (t.dataset.os) t.addEventListener('click', function () { showOs(t.dataset.os); }); });
+
+  var agentTabs = document.querySelectorAll('[data-agent]');
+  function showAgent(agent) {
+    agentTabs.forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.agent === agent)); });
+    document.querySelectorAll('[data-agent-panel]').forEach(function (p) { p.hidden = p.dataset.agentPanel !== agent; });
+    try { localStorage.setItem('agent', agent); } catch (e) {}
+  }
+  agentTabs.forEach(function (t) { t.addEventListener('click', function () { showAgent(t.dataset.agent); }); });
+  var savedAgent = null;
+  try { savedAgent = localStorage.getItem('agent'); } catch (e) {}
+  showAgent(savedAgent && document.querySelector('[data-agent="' + savedAgent + '"]') ? savedAgent : 'claude');
   var saved = null;
   try { saved = localStorage.getItem('os'); } catch (e) {}
   var ua = navigator.userAgent;
