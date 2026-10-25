@@ -5,6 +5,7 @@ from jose import jwt
 
 from config import settings
 from db.client import DatabaseClient
+from models.schemas import MAX_PASSWORD_BYTES
 from db.seed import hash_password
 from services.basket_service import BasketService, parse_anonymous_basket_id
 
@@ -48,6 +49,8 @@ class AuthService:
             self.basket_service.transfer_basket(anonymous_id, email)
 
     def _verify_password(self, password: str, password_hash: str) -> bool:
+        if len(password.encode("utf-8")) > MAX_PASSWORD_BYTES:
+            return False
         return bcrypt.checkpw(
             password.encode("utf-8"), password_hash.encode("utf-8")
         )

@@ -111,6 +111,7 @@ export default function BasketPage() {
                 id={`qty-${item.id}`}
                 type="number"
                 min="0"
+                max="99"
                 value={quantities[String(item.id)] ?? item.quantity}
                 onChange={(event) =>
                   setQuantities((current) => ({

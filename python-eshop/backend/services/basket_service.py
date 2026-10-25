@@ -1,10 +1,14 @@
 import uuid
 
 from db.client import DatabaseClient
-from models.schemas import BasketItemResponse, BasketResponse
+from models.schemas import MAX_LINE_QUANTITY, BasketItemResponse, BasketResponse
 
 
 class EmptyBasketError(Exception):
+    pass
+
+
+class QuantityLimitError(Exception):
     pass
 
 
@@ -43,6 +47,14 @@ class BasketService:
         if not basket:
             basket = self.db.create_basket(buyer_id)
 
+        current = sum(
+            item.quantity for item in basket.items if item.catalog_item_id == catalog_item_id
+        )
+        if current + quantity > MAX_LINE_QUANTITY:
+            raise QuantityLimitError(
+                f"You can have at most {MAX_LINE_QUANTITY} of an item in your basket"
+            )
+
         self.db.add_basket_item(
             basket.id, catalog_item_id, catalog_item.price, quantity
         )
@@ -71,12 +83,16 @@ class BasketService:
         if not user_basket:
             user_basket = self.db.create_basket(user_email)
 
+        existing = {item.catalog_item_id: item.quantity for item in user_basket.items}
         for item in anonymous_basket.items:
+            room = MAX_LINE_QUANTITY - existing.get(item.catalog_item_id, 0)
+            if room <= 0:
+                continue
             self.db.add_basket_item(
                 user_basket.id,
                 item.catalog_item_id,
                 item.unit_price,
-                item.quantity,
+                min(item.quantity, room),
             )
 
         self.db.delete_basket(anonymous_basket.id)
