@@ -25,6 +25,12 @@ ol.steps > li::before { content: counter(step); font: 700 1.05rem var(--display)
 .step > p { color: var(--muted); }
 .done { margin-block: 2rem 3rem; padding: 1.1rem 1.2rem; border-radius: 12px; background: var(--river-soft); display: grid; gap: .4rem; }
 .done h2 { font-size: 1.2rem; }
+main > .tabs { margin-top: 1.5rem; }
+.extra { margin-bottom: 3rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.extra summary { cursor: pointer; padding: 1rem 1.2rem; font: 600 1.05rem var(--display); }
+.extra > .step { padding: 0 1.2rem 1.2rem; gap: .8rem; }
+.extra .tabs { margin-top: 0; }
+.extra h3 { font-size: 1.05rem; margin-top: .6rem; }
 </style>
 </head>
 <body>
@@ -43,66 +49,20 @@ ol.steps > li::before { content: counter(step); font: 700 1.05rem var(--display)
   <div class="wrap">
     <p class="eyebrow">Matt Pocock skills · Part 2</p>
     <h1>Get set up</h1>
-    <p class="lede">Work down the list. Skip anything you already have. Stuck? Put your hand up.</p>
+    <p class="lede">Four steps, with the coding agent you already use. Stuck? Put your hand up and one of us will come to you.</p>
   </div>
 </div>
 
 <main class="wrap">
 
-  <div class="tabs" role="tablist" aria-label="Your computer">
-    <button role="tab" id="tab-win" aria-controls="os-win" aria-selected="true" type="button" data-os="win">Windows</button>
-    <button role="tab" id="tab-mac" aria-controls="os-mac" aria-selected="false" type="button" data-os="mac">Mac</button>
-    <button role="tab" id="tab-linux" aria-controls="os-linux" aria-selected="false" type="button" data-os="linux">Linux</button>
+  <div class="tabs" role="tablist" aria-label="Your coding agent">
+    <button role="tab" id="agent-claude" aria-selected="true" type="button" data-agent="claude">Claude Code</button>
+    <button role="tab" id="agent-codex" aria-selected="false" type="button" data-agent="codex">Codex</button>
+    <button role="tab" id="agent-copilot" aria-selected="false" type="button" data-agent="copilot">Copilot</button>
+    <button role="tab" id="agent-other" aria-selected="false" type="button" data-agent="other">Others</button>
   </div>
 
   <ol class="steps">
-    <li><div class="step"><h2>Install the tools</h2>
-      <div role="tabpanel" id="os-win" aria-labelledby="tab-win" data-panel="win" class="step">
-        <p>In PowerShell, then close and reopen it.</p>
-        <div class="cmd"><pre>winget install Git.Git OpenJS.NodeJS.LTS GitHub.cli
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</pre></div>
-      </div>
-      <div role="tabpanel" id="os-mac" aria-labelledby="tab-mac" data-panel="mac" class="step" hidden>
-        <p>In Terminal, with <a href="https://brew.sh" target="_blank" rel="noopener">Homebrew</a>.</p>
-        <div class="cmd"><pre>xcode-select --install
-brew install node gh uv</pre></div>
-      </div>
-      <div role="tabpanel" id="os-linux" aria-labelledby="tab-linux" data-panel="linux" class="step" hidden>
-        <p>Use your distro's package manager for git, gh and Node 18+.</p>
-        <div class="cmd"><pre>sudo apt install git gh nodejs npm
-curl -LsSf https://astral.sh/uv/install.sh | sh</pre></div>
-      </div>
-      <p>You don't need to install Python. uv fetches the right version for you.</p>
-    </div></li>
-
-    <li><div class="step"><h2>Pick your coding agent</h2>
-      <p>Any of these works tonight. Already have one? Pick it and skip the install.</p>
-      <div class="tabs" role="tablist" aria-label="Your coding agent">
-        <button role="tab" id="agent-claude" aria-controls="agent-panel" aria-selected="true" type="button" data-agent="claude">Claude Code</button>
-        <button role="tab" id="agent-codex" aria-controls="agent-panel" aria-selected="false" type="button" data-agent="codex">Codex</button>
-        <button role="tab" id="agent-copilot" aria-controls="agent-panel" aria-selected="false" type="button" data-agent="copilot">Copilot</button>
-        <button role="tab" id="agent-other" aria-controls="agent-panel" aria-selected="false" type="button" data-agent="other">Others</button>
-      </div>
-      <div id="agent-panel" class="step">
-        <div class="step" data-agent-panel="claude">
-          <div class="cmd" data-os-cmd="win" hidden><pre>irm https://claude.ai/install.ps1 | iex</pre></div>
-          <div class="cmd" data-os-cmd="mac linux"><pre>curl -fsSL https://claude.ai/install.sh | bash</pre></div>
-          <p>Run <code>claude</code> once and sign in.</p>
-        </div>
-        <div class="step" data-agent-panel="codex" hidden>
-          <div class="cmd"><pre>npm install -g @openai/codex</pre></div>
-          <p>Run <code>codex</code> once and sign in.</p>
-        </div>
-        <div class="step" data-agent-panel="copilot" hidden>
-          <div class="cmd"><pre>npm install -g @github/copilot</pre></div>
-          <p>Run <code>copilot</code> once and sign in with GitHub. You need a Copilot plan; the free one is fine.</p>
-        </div>
-        <div class="step" data-agent-panel="other" hidden>
-          <p>Install Cursor, Windsurf or OpenCode from its own website and open a terminal inside it.</p>
-        </div>
-      </div>
-    </div></li>
-
     <li><div class="step"><h2>Install the skills</h2>
       <div class="cmd" data-agent-panel="claude"><pre>claude plugin install mattpocock-skills@claude-plugins-official</pre></div>
       <div class="cmd" data-agent-panel="codex" hidden><pre>codex plugin marketplace add mattpocock/skills
@@ -110,16 +70,16 @@ codex plugin add mattpocock-skills@mattpocock</pre></div>
       <div class="cmd" data-agent-panel="copilot" hidden><pre>copilot plugin marketplace add mattpocock/skills
 copilot plugin install mattpocock-skills@mattpocock</pre></div>
       <div class="cmd" data-agent-panel="other" hidden><pre>npx skills@latest add mattpocock/skills</pre></div>
-      <p data-agent-panel="other" hidden>It asks which agent to install for. These are plain files you can edit; update them later with <code>npx skills@latest update</code>.</p>
-      <p>Use one install method per agent. Doing two installs every skill twice.</p>
+      <p data-agent-panel="other" hidden>Works for Cursor, Windsurf, OpenCode and more. It asks which agent to install for.</p>
+      <p>Run it in your normal terminal, not inside the agent. Use one install method per agent, or you get every skill twice.</p>
     </div></li>
 
     <li><div class="step"><h2>Make your own copy of the shop</h2>
       <a class="cta" href="https://github.com/new?template_name=perth-ai-mp-new-features&amp;template_owner=mashjprime" target="_blank" rel="noopener">Create my copy on GitHub</a>
       <p>Then clone it. Swap in your GitHub name and the name you gave the repo.</p>
-      <div class="cmd"><pre>gh auth login
-gh repo clone YOUR-NAME/YOUR-REPO
+      <div class="cmd"><pre>gh repo clone YOUR-NAME/YOUR-REPO
 cd YOUR-REPO</pre></div>
+      <p>No <code>gh</code>? Use <code>git clone https://github.com/YOUR-NAME/YOUR-REPO</code>.</p>
     </div></li>
 
     <li><div class="step"><h2>Set up the skills in your copy</h2>
@@ -135,6 +95,7 @@ Use the setup-matt-pocock-skills skill</pre></div>
     </div></li>
 
     <li><div class="step"><h2>Run the shop</h2>
+      <p>Needs <code>uv</code> and Node. Missing one? See below.</p>
       <div class="cmd"><span class="label">Terminal 1</span><pre>cd python-eshop/backend
 uv sync
 uv run python run.py</pre></div>
@@ -149,6 +110,53 @@ npm run dev</pre></div>
     <h2>You're ready when the shop shows products with pictures</h2>
     <p class="muted">Next: <a href="skills.html">what each skill does, and the order to use them</a>.</p>
   </div>
+
+  <details class="extra">
+    <summary>Missing a tool, or no coding agent yet?</summary>
+    <div class="step">
+      <div class="tabs" role="tablist" aria-label="Your computer">
+        <button role="tab" id="tab-win" aria-selected="true" type="button" data-os="win">Windows</button>
+        <button role="tab" id="tab-mac" aria-selected="false" type="button" data-os="mac">Mac</button>
+        <button role="tab" id="tab-linux" aria-selected="false" type="button" data-os="linux">Linux</button>
+      </div>
+      <h3>Git, GitHub CLI, Node and uv</h3>
+      <div data-panel="win" class="step">
+        <p>In PowerShell, then close and reopen it.</p>
+        <div class="cmd"><pre>winget install Git.Git OpenJS.NodeJS.LTS GitHub.cli
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</pre></div>
+      </div>
+      <div data-panel="mac" class="step" hidden>
+        <p>In Terminal, with <a href="https://brew.sh" target="_blank" rel="noopener">Homebrew</a>.</p>
+        <div class="cmd"><pre>xcode-select --install
+brew install node gh uv</pre></div>
+      </div>
+      <div data-panel="linux" class="step" hidden>
+        <p>Use your distro's package manager for git, gh and Node 18+.</p>
+        <div class="cmd"><pre>sudo apt install git gh nodejs npm
+curl -LsSf https://astral.sh/uv/install.sh | sh</pre></div>
+      </div>
+      <p>You don't need Python. uv fetches the right version. Sign in to GitHub with <code>gh auth login</code>.</p>
+
+      <h3>A coding agent</h3>
+      <div class="step" data-agent-panel="claude">
+        <div class="cmd" data-os-cmd="win" hidden><pre>irm https://claude.ai/install.ps1 | iex</pre></div>
+        <div class="cmd" data-os-cmd="mac linux"><pre>curl -fsSL https://claude.ai/install.sh | bash</pre></div>
+        <p>Run <code>claude</code> once and sign in. You need a paid Claude plan or API key.</p>
+      </div>
+      <div class="step" data-agent-panel="codex" hidden>
+        <div class="cmd"><pre>npm install -g @openai/codex</pre></div>
+        <p>Run <code>codex</code> once and sign in with ChatGPT.</p>
+      </div>
+      <div class="step" data-agent-panel="copilot" hidden>
+        <div class="cmd"><pre>npm install -g @github/copilot</pre></div>
+        <p>Run <code>copilot</code> once and sign in with GitHub. The free Copilot plan is fine.</p>
+      </div>
+      <div class="step" data-agent-panel="other" hidden>
+        <p>Install Cursor, Windsurf or OpenCode from its own website and open a terminal inside it.</p>
+      </div>
+      <p class="muted">No account tonight? Pair with your neighbour. That's half the fun.</p>
+    </div>
+  </details>
 </main>
 
 <footer class="site-foot">

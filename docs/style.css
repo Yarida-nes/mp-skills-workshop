@@ -71,7 +71,7 @@ code { font-family: var(--mono); font-size: .88em; background: var(--river-soft)
 .bar nav a[aria-current="page"] { color: var(--band-ink); background: #ffffff1f; box-shadow: inset 0 0 0 1px #ffffff40; }
 
 /* Hero band: brand gradient wash, pixel skyline along the bottom, white copy */
-.band { position: relative; overflow: hidden; background: var(--band); color: var(--band-ink); }
+.band { position: relative; overflow: hidden; background: var(--band); color: var(--band-ink); min-height: min(36vw, 30rem); }  /* tall enough to show most of the skyline under the copy */
 .band::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, #ff6b8a55, #6924e04d 50%, #009bcc66); pointer-events: none; }
 .band .skyline { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: auto; max-width: none; opacity: .9; pointer-events: none; }
 .band::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, #050a17d9 35%, #050a1766 75%, #050a17cc); pointer-events: none; }
