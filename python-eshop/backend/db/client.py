@@ -44,10 +44,10 @@ class DatabaseClient:
     ) -> int:
         query = "SELECT COUNT(*) FROM catalog_items WHERE 1=1"
         params: list = []
-        if brand_id:
+        if brand_id is not None:
             query += " AND catalog_brand_id = ?"
             params.append(brand_id)
-        if type_id:
+        if type_id is not None:
             query += " AND catalog_type_id = ?"
             params.append(type_id)
         with self._connection() as conn:
@@ -69,10 +69,10 @@ class DatabaseClient:
             WHERE 1=1
         """
         params: list = []
-        if brand_id:
+        if brand_id is not None:
             query += " AND ci.catalog_brand_id = ?"
             params.append(brand_id)
-        if type_id:
+        if type_id is not None:
             query += " AND ci.catalog_type_id = ?"
             params.append(type_id)
         query += " ORDER BY ci.id LIMIT ? OFFSET ?"

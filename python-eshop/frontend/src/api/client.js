@@ -86,8 +86,8 @@ export const api = {
   getTypes: () => request('/api/catalog/types'),
   getCatalogItems: ({ brandId, typeId, page }) => {
     const params = new URLSearchParams({ page: String(page || 1) });
-    if (brandId) params.set('brand_id', brandId);
-    if (typeId) params.set('type_id', typeId);
+    if (brandId != null && brandId !== '') params.set('brand_id', brandId);
+    if (typeId != null && typeId !== '') params.set('type_id', typeId);
     return request(`/api/catalog/items?${params}`);
   },
 
