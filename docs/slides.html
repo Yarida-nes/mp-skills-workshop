@@ -92,7 +92,7 @@ body { overflow: hidden; background: var(--paper); }
   <div class="fade"></div>
   <div class="stage" id="stage">
     <section class="slide" data-name="setup" data-scenic>
-      <p class="kicker">5:30 pm · while we get going</p>
+      <p class="kicker">While we get going</p>
       <div class="split">
         <div class="qr" data-qr="install"></div>
         <div style="display:grid;gap:1rem;min-width:0">
@@ -191,12 +191,12 @@ body { overflow: hidden; background: var(--paper); }
     </section>
 
     <section class="slide" data-name="showtell" data-scenic>
-      <p class="kicker">8:30 pm · Q&amp;A, then show and tell</p>
+      <p class="kicker">Q&amp;A, then show and tell</p>
       <div class="split">
         <div class="qr" data-qr="skills"></div>
         <div style="display:grid;gap:1rem;min-width:0">
           <p class="say">What did you build?</p>
-          <p class="sub">Three people, five minutes each. Scan for every skill and when to use it.</p>
+          <p class="sub">Show us where you got to. Scan for every skill and when to use it.</p>
           <p class="url" data-url="skills"></p>
         </div>
       </div>
@@ -266,6 +266,7 @@ body { overflow: hidden; background: var(--paper); }
   }
   function startStop() {
     if (!plan) return;
+    timerEl.hidden = false;
     running = !running;
     clearInterval(tick);
     if (running) { lastStamp = Date.now(); tick = setInterval(loop, 250); }
@@ -284,7 +285,7 @@ body { overflow: hidden; background: var(--paper); }
     count.textContent = (current + 1) + ' / ' + slides.length;
     document.querySelector('.deck').classList.toggle('scenic', slides[current].hasAttribute('data-scenic'));
     plan = (Number(slides[current].dataset.minutes) || 0) * 60;
-    timerEl.hidden = !plan;
+    timerEl.hidden = true;  // stays off screen until T is pressed, so no planned time shows unasked
     resetTimer();
     if (history.replaceState) history.replaceState(null, '', '#' + slides[current].dataset.name);
   }
