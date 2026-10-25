@@ -146,8 +146,8 @@ body { overflow: hidden; background: var(--paper); }
     <section class="slide" data-name="grill" data-minutes="12">
       <p class="kicker">Step 1 · Grill</p>
       <p class="say">Let it <em>interview you.</em></p>
-      <p class="prompt"><b>/grill-me</b> I want to add favourites to this shop: signed-in shoppers can save products and see them on a Favourites page. Keep each question short.</p>
-      <p class="sub">Answer fast. If you don't know, say what you'd guess. Not on Claude Code? Ask for “the grill-me skill”.</p>
+      <p class="prompt"><b>/grill-with-docs</b> I want to add favourites to this shop: signed-in shoppers can save products and see them on a Favourites page. Keep each question short.</p>
+      <p class="sub">Answer fast. If you don't know, say what you'd guess. It writes the words you agree into <b>GLOSSARY.md</b>. Codex: <b>$grill-with-docs</b>.</p>
     </section>
 
     <section class="slide" data-name="spec" data-minutes="5">
@@ -155,20 +155,22 @@ body { overflow: hidden; background: var(--paper); }
       <p class="say">Write down what you <em>agreed.</em></p>
       <p class="prompt"><b>/to-spec</b>
 <b>/to-tickets</b></p>
-      <p class="sub">Now there's a record to build against and to review against.</p>
+      <p class="sub">Same session as the grilling: don't clear yet. Now there's a record to build against and review against.</p>
     </section>
 
     <section class="slide" data-name="tdd" data-minutes="15">
       <p class="kicker">Step 3 · Test first</p>
       <p class="say">Red, <em>then green.</em></p>
-      <p class="prompt"><b>/implement</b> the smallest favourites ticket. Show me the failing test before you write the code.</p>
-      <p class="sub">A failing test proves the test can catch the problem.</p>
+      <p class="prompt"><b>/clear</b>
+<b>/implement</b> the smallest favourites ticket. Show me the failing test before you write the code.</p>
+      <p class="sub">Fresh context for each ticket. A failing test proves the test can catch the problem.</p>
     </section>
 
     <section class="slide" data-name="review" data-minutes="8">
       <p class="kicker">Step 4 · Review</p>
       <p class="say">What could go wrong, and <em>which check catches it?</em></p>
       <p class="prompt">Run the tests and show me the output. Then open a PR into my main using the PR template, and review it against <b>REVIEW.md</b>.</p>
+      <p class="sub">The <b>pr</b> skill shapes the PR: a picture of the change, proof it works, and how risky it is to merge.</p>
     </section>
 
     <section class="slide" data-name="risk">
@@ -184,7 +186,7 @@ body { overflow: hidden; background: var(--paper); }
     <section class="slide" data-name="merge" data-minutes="5">
       <p class="kicker">Step 5 · Merge</p>
       <p class="say">You land it, <em>you own it.</em></p>
-      <p class="sub">Read the evidence, fix what matters, merge. Then <b>/retro</b> to improve the next run.</p>
+      <p class="sub">Read the evidence, fix what matters, merge. Then <b>/retro</b>, in the same session, to make the next run better.</p>
     </section>
 
     <section class="slide" data-name="showtell" data-scenic>

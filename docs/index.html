@@ -31,6 +31,12 @@ main > .tabs { margin-top: 1.5rem; }
 .extra > .step { padding: 0 1.2rem 1.2rem; gap: .8rem; }
 .extra .tabs { margin-top: 0; }
 .extra h3 { font-size: 1.05rem; margin-top: .6rem; }
+.why { font-size: .95rem; }
+.why summary { cursor: pointer; color: var(--river); font-weight: 600; width: fit-content; padding-block: .1rem; }
+.why dl { margin: .5rem 0 0; padding: .9rem 1rem; border-left: 3px solid var(--cta); background: var(--surface); border-radius: 0 10px 10px 0; display: grid; gap: .25rem; }
+.why dt { font-weight: 600; color: var(--ink); }
+.why dt:not(:first-child) { margin-top: .55rem; }
+.why dd { margin: 0; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -70,8 +76,23 @@ codex plugin add mattpocock-skills@mattpocock</pre></div>
       <div class="cmd" data-agent-panel="copilot" hidden><pre>copilot plugin marketplace add mattpocock/skills
 copilot plugin install mattpocock-skills@mattpocock</pre></div>
       <div class="cmd" data-agent-panel="other" hidden><pre>npx skills@latest add mattpocock/skills</pre></div>
-      <p data-agent-panel="other" hidden>Works for Cursor, Windsurf, OpenCode and more. It asks which agent to install for.</p>
+      <p data-agent-panel="other" hidden>Works for Cursor, Windsurf, OpenCode, Amp and more. It asks which agent and which skills: take them all, and make sure <code>setup-matt-pocock-skills</code> is ticked.</p>
+      <div class="cmd" data-agent-panel="other" hidden><span class="label">Gemini CLI</span><pre>gemini skills install https://github.com/mattpocock/skills.git --path skills/engineering
+gemini skills install https://github.com/mattpocock/skills.git --path skills/productivity</pre></div>
       <p>Run it in your normal terminal, not inside the agent. Use one install method per agent, or you get every skill twice.</p>
+      <details class="why"><summary>What does this do?</summary><dl>
+        <dt>What gets installed?</dt>
+        <dd>27 skills from <a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">mattpocock/skills</a> (version 1.3). Each skill is a Markdown file of instructions your agent reads when it needs it. Nothing runs on your machine at install time.</dd>
+        <dt>Where does it go?</dt>
+        <dd>Into your agent's own settings folder, not into a repo, so it works in every project.</dd>
+        <dd data-agent-panel="claude">It comes from Claude Code's official plugin marketplace and updates itself.</dd>
+        <dd data-agent-panel="codex" hidden>The first line adds Matt's GitHub repo as a plugin source. The second installs the plugin from it. Codex updates it at startup.</dd>
+        <dd data-agent-panel="copilot" hidden>The first line adds Matt's GitHub repo as a plugin source. The second installs the plugin from it. Using VS Code instead of the CLI? Run <b>Chat: Install Plugin From Source</b> with <code>https://github.com/mattpocock/skills</code>.</dd>
+        <dd data-agent-panel="other" hidden>These are plain files you can read and edit. They don't update themselves: run <code>npx skills@latest update</code> later.</dd>
+        <dt>I already have them. Do I need to do anything?</dt>
+        <dd data-agent-panel="claude">Run it again or check <code>/plugin</code> in Claude Code. You want 1.3 or later, which starts with <code>/grill-with-docs</code> and has <code>/implement-spec</code>, <code>/retro</code> and <code>pr</code>.</dd>
+        <dd data-agent-panel="codex copilot other" hidden>Make sure you have 1.3 or later. It starts with <code>grill-with-docs</code> and has <code>implement-spec</code>, <code>retro</code> and <code>pr</code>. Running the install again picks up the latest.</dd>
+      </dl></details>
     </div></li>
 
     <li><div class="step"><h2>Make your own copy of the shop</h2>
@@ -80,6 +101,14 @@ copilot plugin install mattpocock-skills@mattpocock</pre></div>
       <div class="cmd"><pre>gh repo clone YOUR-NAME/YOUR-REPO
 cd YOUR-REPO</pre></div>
       <p>No <code>gh</code>? Use <code>git clone https://github.com/YOUR-NAME/YOUR-REPO</code>.</p>
+      <details class="why"><summary>What does this do?</summary><dl>
+        <dt>What is this repo?</dt>
+        <dd>A small online shop: a Python (FastAPI) backend with a SQLite database, and a React frontend. It's the same shop Raf used in the first half, with every bug already fixed and 38 tests passing.</dd>
+        <dt>Why a copy, not a fork?</dt>
+        <dd>The button makes a brand new repo in your account. Its issues and pull requests are yours, so your agent can file tickets and open PRs without touching anyone else's work. A fork would send your PRs back to us.</dd>
+        <dt>Public or private?</dt>
+        <dd>Either works.</dd>
+      </dl></details>
     </div></li>
 
     <li><div class="step"><h2>Set up the skills in your copy</h2>
@@ -87,11 +116,24 @@ cd YOUR-REPO</pre></div>
       <div class="cmd" data-agent-panel="claude"><pre>claude
 /setup-matt-pocock-skills</pre></div>
       <div class="cmd" data-agent-panel="codex" hidden><pre>codex
-Use the setup-matt-pocock-skills skill</pre></div>
+$setup-matt-pocock-skills</pre></div>
       <div class="cmd" data-agent-panel="copilot" hidden><pre>copilot
 /setup-matt-pocock-skills</pre></div>
-      <div class="cmd" data-agent-panel="other" hidden><pre>Use the setup-matt-pocock-skills skill</pre></div>
-      <p>When it asks where issues go, pick GitHub if <code>gh</code> is signed in. Otherwise pick local files.</p>
+      <div class="cmd" data-agent-panel="other" hidden><pre>/setup-matt-pocock-skills</pre></div>
+      <p data-agent-panel="other" hidden>If your agent has no slash commands, type: Use the setup-matt-pocock-skills skill.</p>
+      <p>When it asks where issues go, pick GitHub if <code>gh</code> is signed in. Otherwise pick local files. Say yes to the default labels.</p>
+      <details class="why"><summary>What does this do?</summary><dl>
+        <dt>What will it ask?</dt>
+        <dd>Up to three things, one at a time, each with a recommended answer: where issues live (GitHub, GitLab or local files), whether to keep the default triage labels, and where the glossary and decision records go.</dd>
+        <dt>What does it change?</dt>
+        <dd>It shows you a draft first, then adds an "Agent skills" section to the repo's instructions file and writes a few short notes under <code>docs/agents/</code>. Commit them like any other change.</dd>
+        <dt>Why do I need it?</dt>
+        <dd>The skills that write specs and tickets need to know where to put them. You run it once per repo.</dd>
+        <dt data-agent-panel="codex" hidden>Why the <code>$</code>?</dt>
+        <dd data-agent-panel="codex" hidden>In Codex, <code>$name</code> runs a skill by name. Skills you start yourself, like this one, only run that way.</dd>
+        <dt>Local files?</dt>
+        <dd>Tickets go in a <code>.scratch/</code> folder as Markdown instead of GitHub Issues. Everything else works the same.</dd>
+      </dl></details>
     </div></li>
 
     <li><div class="step"><h2>Run the shop</h2>
@@ -103,6 +145,18 @@ uv run python run.py</pre></div>
 npm install
 npm run dev</pre></div>
       <p>Open <a href="http://127.0.0.1:4321" target="_blank" rel="noopener">127.0.0.1:4321</a>. Sign in with <code>demouser@perthai.com.au</code> and <code>Pass@word1</code>.</p>
+      <details class="why"><summary>What does this do?</summary><dl>
+        <dt>Terminal 1</dt>
+        <dd><code>uv sync</code> downloads the right Python and the backend's packages into a local <code>.venv</code> folder. <code>run.py</code> starts the API on port 8765 and creates and fills <code>eshop.db</code> the first time.</dd>
+        <dt>Terminal 2</dt>
+        <dd><code>npm install</code> downloads the frontend's packages, which takes a minute. <code>npm run dev</code> serves the shop on port 4321 and passes API calls through to Terminal 1.</dd>
+        <dt>Why two terminals?</dt>
+        <dd>Both keep running until you press Ctrl+C. Leave them open and use a third terminal for your agent.</dd>
+        <dt>Want the tests?</dt>
+        <dd>In <code>python-eshop/backend</code>, run <code>uv run pytest</code>. Your agent runs them too when it builds with the <code>tdd</code> skill.</dd>
+        <dt>Port already in use?</dt>
+        <dd>Something else is on 8765 or 4321, often a copy of the shop from the first half. Stop it with Ctrl+C in its terminal.</dd>
+      </dl></details>
     </div></li>
   </ol>
 
@@ -182,7 +236,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh</pre></div>
   var agentTabs = document.querySelectorAll('[data-agent]');
   function showAgent(agent) {
     agentTabs.forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.agent === agent)); });
-    document.querySelectorAll('[data-agent-panel]').forEach(function (p) { p.hidden = p.dataset.agentPanel !== agent; });
+    document.querySelectorAll('[data-agent-panel]').forEach(function (p) { p.hidden = p.dataset.agentPanel.split(' ').indexOf(agent) < 0; });
     try { localStorage.setItem('agent', agent); } catch (e) {}
   }
   agentTabs.forEach(function (t) { t.addEventListener('click', function () { showAgent(t.dataset.agent); }); });
