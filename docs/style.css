@@ -1,0 +1,61 @@
+/* Shared tokens for the install page, the skills page and the slides. */
+:root {
+  --paper: #f6f8f9;
+  --surface: #ffffff;
+  --ink: #12212b;
+  --muted: #566874;
+  --line: #d9e1e6;
+  --river: #0b6e8a;
+  --river-soft: #e1f0f4;
+  --sun: #b85c00;
+  --sun-soft: #fbeedd;
+  --alarm: #b3261e;
+  --code-bg: #0f1d26;
+  --code-fg: #e4eef2;
+  --ok: #1f7a4d;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0c171e; --surface: #12212b; --ink: #e6eef2; --muted: #9db0bb; --line: #24394a;
+    --river: #4fb8d6; --river-soft: #133847; --sun: #f0a050; --sun-soft: #3a2a17; --alarm: #ff8a80;
+    --code-bg: #071016; --code-fg: #e4eef2; --ok: #5cc98f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0c171e; --surface: #12212b; --ink: #e6eef2; --muted: #9db0bb; --line: #24394a;
+  --river: #4fb8d6; --river-soft: #133847; --sun: #f0a050; --sun-soft: #3a2a17; --alarm: #ff8a80;
+  --code-bg: #071016; --code-fg: #e4eef2; --ok: #5cc98f;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 1rem/1.6 var(--body); }
+a { color: var(--river); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
+p { margin: 0; }
+code { font-family: var(--mono); font-size: .9em; background: var(--river-soft); padding: .1em .35em; border-radius: 4px; }
+.wrap { max-width: 44rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font: 500 .78rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--sun); }
+.muted { color: var(--muted); }
+
+/* Top bar shared by the reading pages */
+.bar { background: var(--surface); border-bottom: 1px solid var(--line); }
+.bar .wrap { display: flex; align-items: center; gap: .75rem 1rem; padding-block: .7rem; flex-wrap: wrap; }
+.brand { font-family: var(--display); font-weight: 800; text-decoration: none; color: var(--ink); }
+.brand span { color: var(--river); }
+.bar nav { display: flex; gap: .25rem; flex-wrap: wrap; margin-left: auto; }
+.bar nav a { text-decoration: none; color: var(--muted); font-size: .95rem; padding: .3rem .6rem; border-radius: 6px; }
+.bar nav a[aria-current="page"] { color: var(--ink); background: var(--river-soft); }
+
+/* Commands with copy buttons */
+.cmd { position: relative; background: var(--code-bg); color: var(--code-fg); border-radius: 10px; min-width: 0; }
+.cmd pre { margin: 0; padding: .85rem 4.5rem .85rem 1rem; overflow-x: auto; font: 400 .9rem/1.55 var(--mono); white-space: pre; }
+.cmd .label { display: block; font: 500 .7rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #8fb3c2; padding: .6rem 1rem 0; }
+.cmd .copy { position: absolute; top: .45rem; right: .45rem; font: 500 .8rem var(--body); background: transparent; color: var(--code-fg); border: 1px solid #ffffff40; border-radius: 6px; padding: .3rem .6rem; cursor: pointer; }
+.cmd .copy:hover { border-color: #ffffffa0; }

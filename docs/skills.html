@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Skills Night Skill Map</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Matt Pocock's skills in plain words, and the order to use them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Layout: a vertical route for tonight's order, then compact groups for everything else. */
+.hero { padding-block: 2rem 1.5rem; display: grid; gap: .6rem; }
+.hero h1 { font-size: clamp(2rem, 8vw, 2.8rem); font-weight: 800; letter-spacing: -.02em; }
+.hero p.lede { font-size: 1.1rem; color: var(--muted); }
+.legend { display: flex; gap: .5rem 1rem; flex-wrap: wrap; font-size: .9rem; color: var(--muted); }
+.pill { font: 500 .72rem var(--mono); letter-spacing: .04em; padding: .15rem .5rem; border-radius: 999px; white-space: nowrap; }
+.pill.you { background: var(--river-soft); color: var(--river); }
+.pill.auto { background: var(--sun-soft); color: var(--sun); }
+
+h2.group { font-size: 1.35rem; margin-block: 2rem .9rem; }
+.route { list-style: none; margin: 0; padding: 0; display: grid; }
+.route li { display: grid; grid-template-columns: 2.2rem 1fr; gap: .9rem; position: relative; padding-bottom: 1.4rem; }
+.route li::before { content: counter(stop); counter-increment: stop; font: 700 1rem var(--display); width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; background: var(--river); color: var(--surface); z-index: 1; }
+.route li:not(:last-child)::after { content: ""; position: absolute; left: 1.05rem; top: 2.2rem; bottom: 0; width: 2px; background: var(--line); }
+.route { counter-reset: stop; }
+.stop { display: grid; gap: .3rem; min-width: 0; padding-top: .15rem; }
+.stop-head { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.stop-head code { font-size: 1.05rem; font-weight: 500; background: none; padding: 0; color: var(--ink); }
+.stop p { color: var(--muted); }
+.stop .inside { font-size: .9rem; }
+
+.list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.list li { display: grid; grid-template-columns: minmax(9rem, 13rem) 1fr; gap: .3rem 1rem; padding: .75rem 1rem; border-top: 1px solid var(--line); align-items: baseline; }
+.list li:first-child { border-top: 0; }
+.list .name { display: flex; gap: .4rem; align-items: baseline; flex-wrap: wrap; }
+.list code { background: none; padding: 0; color: var(--ink); font-weight: 500; }
+.list p { color: var(--muted); font-size: .95rem; }
+@media (max-width: 30rem) { .list li { grid-template-columns: 1fr; } }
+.foot { margin-block: 2rem 3rem; color: var(--muted); font-size: .95rem; }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="./">Perth AI <span>·</span> Skills Night</a>
+    <nav aria-label="Pages">
+      <a href="./">Setup</a>
+      <a href="skills.html" aria-current="page">Skills</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="hero">
+    <p class="eyebrow">Matt Pocock skills · cheat sheet</p>
+    <h1>Which skill, and when</h1>
+    <p class="lede">A skill is a written-down workflow your agent follows. Some you type, like <code>/grill-me</code>. Others the agent picks up on its own when the task fits.</p>
+    <p class="legend"><span><span class="pill you">you type it</span> you start it</span><span><span class="pill auto">agent picks it</span> runs when it fits</span></p>
+  </div>
+
+  <h2 class="group">Tonight: building a new feature</h2>
+  <ol class="route">
+    <li><div class="stop"><div class="stop-head"><code>/grill-me</code><span class="pill you">you type it</span></div>
+      <p>Interviews you about the idea, one question at a time, until there are no loose ends. Use <code>/grill-with-docs</code> to also keep a glossary and decision records.</p></div></li>
+    <li><div class="stop"><div class="stop-head"><code>/to-spec</code><span class="pill you">you type it</span></div>
+      <p>Writes up what you agreed as a spec and files it in your issue tracker.</p></div></li>
+    <li><div class="stop"><div class="stop-head"><code>/to-tickets</code><span class="pill you">you type it</span></div>
+      <p>Breaks the spec into small tickets, in the order they can be built.</p></div></li>
+    <li><div class="stop"><div class="stop-head"><code>/implement</code><span class="pill you">you type it</span></div>
+      <p>Builds a ticket.</p>
+      <p class="inside">Inside it, <code>tdd</code> writes a failing test first and then the code to pass it, and <code>code-review</code> checks the result.</p></div></li>
+    <li><div class="stop"><div class="stop-head"><code>pr</code><span class="pill auto">agent picks it</span></div>
+      <p>Writes the pull request: what changed, the evidence it works, and how risky the merge is.</p></div></li>
+    <li><div class="stop"><div class="stop-head"><code>/retro</code><span class="pill you">you type it</span></div>
+      <p>After a session, suggests what to change in your setup so the next one goes better.</p></div></li>
+  </ol>
+
+  <h2 class="group">Fixing bugs (Raf's part)</h2>
+  <ul class="list">
+    <li><span class="name"><code>/triage</code><span class="pill you">you type it</span></span><p>Moves a bug report from vague to ready for an agent: is it real, can it be reproduced, what's the brief?</p></li>
+    <li><span class="name"><code>diagnosing-bugs</code><span class="pill auto">agent picks it</span></span><p>For hard bugs: reproduce, find the cause, fix it, then add a regression test.</p></li>
+  </ul>
+
+  <h2 class="group">Getting started and getting unstuck</h2>
+  <ul class="list">
+    <li><span class="name"><code>/setup-matt-pocock-skills</code><span class="pill you">you type it</span></span><p>Run once per repo. Sets up where issues and docs go.</p></li>
+    <li><span class="name"><code>/ask-matt</code><span class="pill you">you type it</span></span><p>Describe your situation and it tells you which skill to use.</p></li>
+    <li><span class="name"><code>/wait-what</code><span class="pill you">you type it</span></span><p>Re-explains the last answer in plainer words.</p></li>
+    <li><span class="name"><code>/handoff</code><span class="pill you">you type it</span></span><p>Sums up the session so another agent, or tomorrow's you, can pick it up.</p></li>
+  </ul>
+
+  <h2 class="group">Bigger work</h2>
+  <ul class="list">
+    <li><span class="name"><code>/wayfinder</code><span class="pill you">you type it</span></span><p>Maps out work too big for one session as a set of decisions to settle one at a time.</p></li>
+    <li><span class="name"><code>/implement-spec</code><span class="pill you">you type it</span></span><p>Builds a whole spec on one branch, working on several tickets in parallel.</p></li>
+    <li><span class="name"><code>/improve-codebase-architecture</code><span class="pill you">you type it</span></span><p>Finds places the code could be simpler, shows them in a report, then grills you on one.</p></li>
+    <li><span class="name"><code>prototype</code><span class="pill auto">agent picks it</span></span><p>Builds a throwaway version to answer a design question before committing to it.</p></li>
+  </ul>
+
+  <h2 class="group">Learning</h2>
+  <ul class="list">
+    <li><span class="name"><code>/teach</code><span class="pill you">you type it</span></span><p>Teaches you a topic over several sessions, with short lessons and quizzes.</p></li>
+    <li><span class="name"><code>research</code><span class="pill auto">agent picks it</span></span><p>Looks a question up in primary sources and saves the answer with citations.</p></li>
+  </ul>
+
+  <p class="foot">Every skill, with install notes: <a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">github.com/mattpocock/skills</a></p>
+</main>
+</body>
+</html>

@@ -3,483 +3,135 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Perth AI Skills Night</title>
+<title>Skills Night Setup</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Setup steps, prompts and run sheet for Part 2 of the Perth AI workshop on Matt Pocock's skills.">
+<meta name="description" content="Install Matt Pocock's skills and get the workshop shop running.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
 <style>
-/* Layout: a single reading column with a sticky section bar; each section doubles as a projector slide in Present mode. */
-:root {
-  --paper: #f6f8f9;
-  --surface: #ffffff;
-  --ink: #12212b;
-  --muted: #566874;
-  --line: #d9e1e6;
-  --river: #0b6e8a;
-  --river-soft: #e1f0f4;
-  --sun: #b85c00;
-  --code-bg: #0f1d26;
-  --code-fg: #e4eef2;
-  --ok: #1f7a4d;
-  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Menlo, monospace;
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #0c171e; --surface: #12212b; --ink: #e6eef2; --muted: #9db0bb; --line: #24394a;
-    --river: #4fb8d6; --river-soft: #133847; --sun: #f0a050; --code-bg: #071016; --code-fg: #e4eef2; --ok: #5cc98f;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --paper: #0c171e; --surface: #12212b; --ink: #e6eef2; --muted: #9db0bb; --line: #24394a;
-  --river: #4fb8d6; --river-soft: #133847; --sun: #f0a050; --code-bg: #071016; --code-fg: #e4eef2; --ok: #5cc98f;
-  color-scheme: dark;
-}
-* { box-sizing: border-box; }
-html { scroll-padding-top: 4.5rem; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
-body {
-  margin: 0; background: var(--paper); color: var(--ink);
-  font: 400 1rem/1.6 var(--body);
-}
-body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
-a { color: var(--river); text-underline-offset: 2px; }
-a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--river); outline-offset: 2px; }
-h1, h2, h3 { font-family: var(--display); line-height: 1.15; text-wrap: balance; margin: 0; }
-h2 { font-size: clamp(1.6rem, 3.2vw, 2.2rem); font-weight: 700; }
-h3 { font-size: 1.15rem; font-weight: 700; }
-p { margin: 0; }
-code { font-family: var(--mono); font-size: .9em; background: var(--river-soft); padding: .1em .35em; border-radius: 4px; }
-.wrap { max-width: 56rem; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-
-/* Top bar */
-.bar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--surface); border-bottom: 1px solid var(--line); }
-.bar .wrap { display: flex; align-items: center; gap: 1rem; padding-block: .6rem; flex-wrap: wrap; }
-.brand { font-family: var(--display); font-weight: 800; font-size: 1.05rem; text-decoration: none; color: var(--ink); white-space: nowrap; }
-.brand span { color: var(--river); }
-.bar nav { display: flex; gap: .25rem; flex-wrap: wrap; flex: 1; min-width: 0; }
-.bar nav a { text-decoration: none; color: var(--muted); font-size: .9rem; padding: .25rem .55rem; border-radius: 6px; }
-.bar nav a:hover { color: var(--ink); background: var(--river-soft); }
-.btn { font: 500 .9rem var(--body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: .4rem .8rem; border-radius: 8px; cursor: pointer; }
-.btn:hover { border-color: var(--river); }
-.btn.primary { background: var(--river); border-color: var(--river); color: var(--surface); }
-
-/* Hero */
-.hero { padding-block: 3rem 2rem; display: grid; gap: 1.5rem; }
-.eyebrow { font: 500 .78rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--sun); }
-.hero h1 { font-size: clamp(2.2rem, 6vw, 3.6rem); font-weight: 800; letter-spacing: -.02em; }
-.hero p.lede { font-size: 1.15rem; color: var(--muted); max-width: 38rem; }
-
-/* Run sheet */
-.runsheet { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); }
-.runsheet li { display: grid; grid-template-columns: 6.5rem 1fr auto; gap: 1rem; padding: .75rem 1rem; border-top: 1px solid var(--line); align-items: baseline; }
-.runsheet li:first-child { border-top: 0; }
-.runsheet time { font: 500 .95rem var(--mono); font-variant-numeric: tabular-nums; color: var(--river); }
-.runsheet .who { font-size: .82rem; color: var(--muted); white-space: nowrap; }
-.runsheet li.mine { background: var(--river-soft); }
-@media (max-width: 34rem) {
-  .runsheet li { grid-template-columns: 5rem 1fr; }
-  .runsheet .who { grid-column: 2; }
-}
-
-/* Sections */
-section.slide { padding-block: 3rem; border-top: 1px solid var(--line); display: grid; gap: 1.5rem; }
-.section-head { display: grid; gap: .5rem; }
-.section-head p { color: var(--muted); max-width: 40rem; }
-.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
-.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1.1rem 1.2rem; display: grid; gap: .6rem; align-content: start; min-width: 0; }
-.panel p, .panel li { color: var(--muted); }
-.panel ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .25rem; }
-
-/* OS tabs */
-.tabs { display: flex; gap: .25rem; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
-.tabs button { font: 500 .95rem var(--body); background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted); padding: .5rem .9rem; cursor: pointer; }
+/* Layout: one narrow column of numbered steps, readable on a phone held in one hand. */
+.hero { padding-block: 2rem 1rem; display: grid; gap: .6rem; }
+.hero h1 { font-size: clamp(2rem, 8vw, 2.8rem); font-weight: 800; letter-spacing: -.02em; }
+.hero p.lede { font-size: 1.1rem; color: var(--muted); }
+.tabs { display: flex; gap: .25rem; border-bottom: 1px solid var(--line); margin-top: 1rem; }
+.tabs button { flex: 1; font: 600 1rem var(--body); background: none; border: 0; border-bottom: 3px solid transparent; color: var(--muted); padding: .7rem .5rem; cursor: pointer; }
 .tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--river); }
-
-/* Steps */
-ol.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; counter-reset: step; }
-ol.steps > li { display: grid; grid-template-columns: 2.2rem 1fr; gap: .9rem; counter-increment: step; }
-ol.steps > li::before { content: counter(step); font: 700 1rem var(--display); width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; background: var(--river-soft); color: var(--river); }
-.step-body { display: grid; gap: .5rem; min-width: 0; }
-.step-body > p { color: var(--muted); }
-.step-body .time { font: 500 .78rem var(--mono); color: var(--sun); letter-spacing: .04em; }
-
-/* Code with copy */
-.cmd { position: relative; background: var(--code-bg); color: var(--code-fg); border-radius: 10px; min-width: 0; }
-.cmd pre { margin: 0; padding: .85rem 4.5rem .85rem 1rem; overflow-x: auto; font: 400 .88rem/1.55 var(--mono); white-space: pre; }
-.cmd.prompt pre { white-space: pre-wrap; }
-.cmd .copy { position: absolute; top: .45rem; right: .45rem; font: 500 .75rem var(--body); background: transparent; color: var(--code-fg); border: 1px solid #ffffff40; border-radius: 6px; padding: .25rem .55rem; cursor: pointer; }
-.cmd .copy:hover { border-color: #ffffffa0; }
-.cmd .label { display: block; font: 500 .7rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: #8fb3c2; padding: .6rem 1rem 0; }
-
-/* Checklist */
-.check { list-style: none; padding: 0; margin: 0; display: grid; gap: .45rem; }
-.check label { display: flex; gap: .6rem; align-items: flex-start; cursor: pointer; color: var(--ink); }
-.check input { margin-top: .3rem; accent-color: var(--ok); width: 1.05rem; height: 1.05rem; flex: none; }
-.check input:checked + span { color: var(--muted); text-decoration: line-through; }
-.ready { font-weight: 600; color: var(--ok); }
-
-/* Feature picker */
-.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
-.feature { text-align: left; font: inherit; color: inherit; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1rem 1.1rem; cursor: pointer; display: grid; gap: .4rem; align-content: start; }
-.feature:hover { border-color: var(--river); }
-.feature[aria-pressed="true"] { border-color: var(--river); box-shadow: inset 0 0 0 1px var(--river); }
-.feature .tag { font: 500 .72rem var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--sun); }
-.feature p { color: var(--muted); font-size: .95rem; }
-
-/* Risk table */
-.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
-table { border-collapse: collapse; width: 100%; min-width: 30rem; }
-th, td { text-align: left; padding: .7rem 1rem; border-top: 1px solid var(--line); vertical-align: top; }
-th { font: 500 .78rem var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); border-top: 0; }
-td:first-child { font-weight: 600; white-space: nowrap; }
-
-footer { padding-block: 2.5rem 3rem; color: var(--muted); font-size: .9rem; border-top: 1px solid var(--line); }
-
-/* Present mode: one section per screen, big type */
-body.present .bar nav, body.present .hero .runsheet-note { display: none; }
-body.present main > .slide, body.present main > .hero { display: none; }
-body.present main > .is-current { display: grid; min-height: calc(100vh - 3.5rem); align-content: center; border-top: 0; font-size: 1.25rem; max-width: 70rem; }
-body.present main > .is-current h2 { font-size: clamp(2.2rem, 4.5vw, 3.4rem); }
-body.present footer { display: none; }
-.pager { display: none; font: 500 .85rem var(--mono); color: var(--muted); }
-body.present .pager { display: inline; }
-
-@media (prefers-reduced-motion: no-preference) {
-  html { scroll-behavior: smooth; }
-}
+ol.steps { list-style: none; margin: 0; padding: 1.5rem 0 0; display: grid; gap: 1.6rem; counter-reset: step; }
+ol.steps > li { display: grid; grid-template-columns: 2.2rem 1fr; gap: .8rem; counter-increment: step; }
+ol.steps > li::before { content: counter(step); font: 700 1.05rem var(--display); width: 2.2rem; height: 2.2rem; border-radius: 50%; display: grid; place-items: center; background: var(--river-soft); color: var(--river); }
+.step { display: grid; gap: .55rem; min-width: 0; }
+.step h2 { font-size: 1.2rem; }
+.step > p { color: var(--muted); }
+.big-link { display: inline-block; justify-self: start; background: var(--river); color: var(--surface); text-decoration: none; font-weight: 600; padding: .65rem 1rem; border-radius: 8px; }
+.done { margin-block: 2rem 3rem; padding: 1.1rem 1.2rem; border-radius: 12px; background: var(--river-soft); display: grid; gap: .4rem; }
+.done h2 { font-size: 1.2rem; }
 </style>
 </head>
 <body>
 <header class="bar">
   <div class="wrap">
-    <a class="brand" href="#top">Perth AI <span>·</span> Skills Night</a>
-    <nav aria-label="Sections">
-      <a href="#setup">Setup</a>
-      <a href="#triage">Triage</a>
-      <a href="#features">New feature</a>
-      <a href="#review">Review</a>
-      <a href="#resources">Resources</a>
+    <a class="brand" href="./">Perth AI <span>·</span> Skills Night</a>
+    <nav aria-label="Pages">
+      <a href="./" aria-current="page">Setup</a>
+      <a href="skills.html">Skills</a>
     </nav>
-    <span class="pager" id="pager"></span>
-    <button class="btn" id="present" type="button">Present</button>
   </div>
 </header>
 
-<main id="top">
-  <div class="wrap hero" id="intro">
-    <p class="eyebrow">Matt Pocock skills · Part 2 · Wed 28 Oct · Bloom Bentley</p>
-    <h1>From prompting to a workflow you can trust</h1>
-    <p class="lede">Everything for tonight in one place: get set up, follow along, and copy the prompts. Keep this page open on your laptop.</p>
-    <ol class="runsheet" aria-label="Run sheet">
-      <li><time>5:30 pm</time><span>Arrival, introductions and setup</span><span class="who">Everyone</span></li>
-      <li><time>6:00 pm</time><span>Got the job, handed a messy codebase: retro, triage, bug fix</span><span class="who">Raf</span></li>
-      <li><time>7:00 pm</time><span>Pizza and networking</span><span class="who">Everyone</span></li>
-      <li class="mine"><time>7:30 pm</time><span>Codebase is clean, now they want features: grill, spec, tickets, implement, review</span><span class="who">Mash</span></li>
-      <li><time>8:30 pm</time><span>Q&amp;A</span><span class="who">Raf and Mash</span></li>
-      <li><time>8:45 pm</time><span>Show and tell, if time allows</span><span class="who">You</span></li>
-    </ol>
+<main class="wrap">
+  <div class="hero">
+    <p class="eyebrow">Matt Pocock skills · Part 2</p>
+    <h1>Get set up</h1>
+    <p class="lede">Work down the list. Skip anything you already have. Stuck? Put your hand up.</p>
   </div>
 
-  <section class="slide wrap" id="setup" aria-labelledby="setup-h">
-    <div class="section-head">
-      <p class="eyebrow">5:30 pm · Setup</p>
-      <h2 id="setup-h">Get set up</h2>
-      <p>Pick your computer below and work down the list. Stuck? Put your hand up and Mash will come over.</p>
-    </div>
+  <div class="tabs" role="tablist" aria-label="Your computer">
+    <button role="tab" id="tab-win" aria-controls="os-win" aria-selected="true" type="button" data-os="win">Windows</button>
+    <button role="tab" id="tab-mac" aria-controls="os-mac" aria-selected="false" type="button" data-os="mac">Mac</button>
+    <button role="tab" id="tab-linux" aria-controls="os-linux" aria-selected="false" type="button" data-os="linux">Linux</button>
+  </div>
 
-    <div class="tabs" role="tablist" aria-label="Operating system">
-      <button role="tab" id="tab-win" aria-controls="os-win" aria-selected="true" type="button" data-os="win">Windows</button>
-      <button role="tab" id="tab-mac" aria-controls="os-mac" aria-selected="false" type="button" data-os="mac">macOS</button>
-      <button role="tab" id="tab-linux" aria-controls="os-linux" aria-selected="false" type="button" data-os="linux">Linux</button>
-    </div>
-
-    <div role="tabpanel" id="os-win" aria-labelledby="tab-win" data-panel="win">
-      <ol class="steps">
-        <li><div class="step-body"><h3>Install the tools</h3><p>In PowerShell. Skip anything you already have. Python is handled by uv, so you don't need to install it.</p>
-          <div class="cmd"><pre>winget install Git.Git OpenJS.NodeJS.LTS GitHub.cli
+  <ol class="steps">
+    <li><div class="step"><h2>Install the tools</h2>
+      <div role="tabpanel" id="os-win" aria-labelledby="tab-win" data-panel="win" class="step">
+        <p>In PowerShell, then close and reopen it.</p>
+        <div class="cmd"><pre>winget install Git.Git OpenJS.NodeJS.LTS GitHub.cli
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"</pre></div>
-          <p>Close and reopen PowerShell afterwards so the new commands are found.</p></div></li>
-        <li><div class="step-body"><h3>Install Claude Code</h3>
-          <div class="cmd"><pre>irm https://claude.ai/install.ps1 | iex</pre></div>
-          <p>Then run <code>claude</code> once and sign in. Using Copilot, Codex or Cursor instead? That's fine; see the skills step.</p></div></li>
-      </ol>
-    </div>
-    <div role="tabpanel" id="os-mac" aria-labelledby="tab-mac" data-panel="mac" hidden>
-      <ol class="steps">
-        <li><div class="step-body"><h3>Install the tools</h3><p>In Terminal, with <a href="https://brew.sh" target="_blank" rel="noopener">Homebrew</a>. Skip anything you already have. Python is handled by uv.</p>
-          <div class="cmd"><pre>xcode-select --install
-brew install node gh uv</pre></div></div></li>
-        <li><div class="step-body"><h3>Install Claude Code</h3>
-          <div class="cmd"><pre>curl -fsSL https://claude.ai/install.sh | bash</pre></div>
-          <p>Then run <code>claude</code> once and sign in.</p></div></li>
-      </ol>
-    </div>
-    <div role="tabpanel" id="os-linux" aria-labelledby="tab-linux" data-panel="linux" hidden>
-      <ol class="steps">
-        <li><div class="step-body"><h3>Install the tools</h3><p>Git, Node 18+ and the GitHub CLI from your package manager, then uv. Python is handled by uv.</p>
-          <div class="cmd"><pre>sudo apt install git gh nodejs npm   # or your distro's equivalent
-curl -LsSf https://astral.sh/uv/install.sh | sh</pre></div></div></li>
-        <li><div class="step-body"><h3>Install Claude Code</h3>
-          <div class="cmd"><pre>curl -fsSL https://claude.ai/install.sh | bash</pre></div>
-          <p>Then run <code>claude</code> once and sign in.</p></div></li>
-      </ol>
-    </div>
+      </div>
+      <div role="tabpanel" id="os-mac" aria-labelledby="tab-mac" data-panel="mac" class="step" hidden>
+        <p>In Terminal, with <a href="https://brew.sh" target="_blank" rel="noopener">Homebrew</a>.</p>
+        <div class="cmd"><pre>xcode-select --install
+brew install node gh uv</pre></div>
+      </div>
+      <div role="tabpanel" id="os-linux" aria-labelledby="tab-linux" data-panel="linux" class="step" hidden>
+        <p>Use your distro's package manager for git, gh and Node 18+.</p>
+        <div class="cmd"><pre>sudo apt install git gh nodejs npm
+curl -LsSf https://astral.sh/uv/install.sh | sh</pre></div>
+      </div>
+      <p>You don't need to install Python. uv fetches the right version for you.</p>
+    </div></li>
 
-    <ol class="steps" start="3" style="counter-reset: step 2">
-      <li><div class="step-body"><h3>Install Matt Pocock's skills</h3>
-        <div class="cmd"><span class="label">Claude Code</span><pre>claude plugin install mattpocock-skills@claude-plugins-official</pre></div>
-        <div class="cmd"><span class="label">Copilot, Cursor, Codex and others</span><pre>npx skills@latest add mattpocock/skills</pre></div>
-        <p>Pick one method per agent. Installing both gives you every skill twice.</p></div></li>
-      <li><div class="step-body"><h3>Make your own copy of the shop</h3>
-        <p>Use the template, not a fork: your copy gets its own issues, and pull requests go to your own <code>main</code>.</p>
-        <p><a class="btn primary" href="https://github.com/new?template_name=perth-ai-mp-new-features&amp;template_owner=mashjprime" target="_blank" rel="noopener">Create my copy on GitHub</a></p>
-        <div class="cmd"><pre>gh auth login
+    <li><div class="step"><h2>Install Claude Code</h2>
+      <div class="cmd" data-os-cmd="win" hidden><pre>irm https://claude.ai/install.ps1 | iex</pre></div>
+      <div class="cmd" data-os-cmd="mac linux"><pre>curl -fsSL https://claude.ai/install.sh | bash</pre></div>
+      <p>Run <code>claude</code> once and sign in. Already using Copilot, Codex or Cursor? Keep it and skip this step.</p>
+    </div></li>
+
+    <li><div class="step"><h2>Install the skills</h2>
+      <div class="cmd"><span class="label">Claude Code</span><pre>claude plugin install mattpocock-skills@claude-plugins-official</pre></div>
+      <div class="cmd"><span class="label">Any other agent</span><pre>npx skills@latest add mattpocock/skills</pre></div>
+      <p>Use one or the other. Doing both installs every skill twice.</p>
+    </div></li>
+
+    <li><div class="step"><h2>Make your own copy of the shop</h2>
+      <a class="big-link" href="https://github.com/new?template_name=perth-ai-mp-new-features&amp;template_owner=mashjprime" target="_blank" rel="noopener">Create my copy on GitHub</a>
+      <p>Then clone it. Swap in your GitHub name and the name you gave the repo.</p>
+      <div class="cmd"><pre>gh auth login
 gh repo clone YOUR-NAME/YOUR-REPO
-cd YOUR-REPO</pre></div></div></li>
-      <li><div class="step-body"><h3>Set up the skills in your copy</h3>
-        <p>Start your agent in the repo folder and run the setup skill. Choose GitHub issues if <code>gh</code> is signed in, otherwise local files.</p>
-        <div class="cmd"><pre>claude
-/setup-matt-pocock-skills</pre></div></div></li>
-      <li><div class="step-body"><h3>Run the shop</h3>
-        <p>Two terminals, both starting in your repo folder.</p>
-        <div class="cmd"><span class="label">Terminal 1 · backend</span><pre>cd python-eshop/backend
+cd YOUR-REPO</pre></div>
+    </div></li>
+
+    <li><div class="step"><h2>Set up the skills in your copy</h2>
+      <div class="cmd"><pre>claude
+/setup-matt-pocock-skills</pre></div>
+      <p>When it asks where issues go, pick GitHub if <code>gh</code> is signed in. Otherwise pick local files.</p>
+    </div></li>
+
+    <li><div class="step"><h2>Run the shop</h2>
+      <div class="cmd"><span class="label">Terminal 1</span><pre>cd python-eshop/backend
 uv sync
 uv run python run.py</pre></div>
-        <div class="cmd"><span class="label">Terminal 2 · frontend</span><pre>cd python-eshop/frontend
+      <div class="cmd"><span class="label">Terminal 2</span><pre>cd python-eshop/frontend
 npm install
 npm run dev</pre></div>
-        <p>Open <a href="http://127.0.0.1:4321" target="_blank" rel="noopener">127.0.0.1:4321</a> and sign in with <code>demouser@perthai.com.au</code> / <code>Pass@word1</code>.</p></div></li>
-    </ol>
+      <p>Open <a href="http://127.0.0.1:4321" target="_blank" rel="noopener">127.0.0.1:4321</a>. Sign in with <code>demouser@perthai.com.au</code> and <code>Pass@word1</code>.</p>
+    </div></li>
+  </ol>
 
-    <div class="panel">
-      <h3>You're ready when</h3>
-      <ul class="check" id="ready-list">
-        <li><label><input type="checkbox" id="ready-agent"><span><code>claude</code> (or your agent) starts and you're signed in</span></label></li>
-        <li><label><input type="checkbox" id="ready-skills"><span>Typing <code>/grill</code> in your agent suggests <code>/grill-me</code></span></label></li>
-        <li><label><input type="checkbox" id="ready-copy"><span>You have your own copy of the repo cloned</span></label></li>
-        <li><label><input type="checkbox" id="ready-setup"><span><code>/setup-matt-pocock-skills</code> has run in it</span></label></li>
-        <li><label><input type="checkbox" id="ready-shop"><span>The shop shows products with pictures in your browser</span></label></li>
-      </ul>
-      <p class="ready" id="ready-msg" hidden>All set. Enjoy Raf's session.</p>
-    </div>
-  </section>
-
-  <section class="slide wrap" id="triage" aria-labelledby="triage-h">
-    <div class="section-head">
-      <p class="eyebrow">6:00 pm · Raf</p>
-      <h2 id="triage-h">Part 1: you've been handed a messy codebase</h2>
-      <p>You've just started the job. The client vibe-coded a Python rewrite of their old store, and it's buggy. Raf walks through retro, triage and a fix on the original repo.</p>
-    </div>
-    <div class="grid2">
-      <div class="panel"><h3>Follow along</h3><p>The bug reports are the issues on the <a href="https://github.com/perth-ai/workshop-mp-skills-for-ai-native-devs/issues" target="_blank" rel="noopener">Part 1 repo</a>. Notice how each one moves from a vague report to an agent-ready brief.</p></div>
-      <div class="panel"><h3>The skill doing the work</h3><p><code>/triage</code> moves an issue through triage states: is it real, can it be reproduced, and is it ready for an agent to pick up?</p></div>
-    </div>
-  </section>
-
-  <section class="slide wrap" id="features" aria-labelledby="features-h">
-    <div class="section-head">
-      <p class="eyebrow">7:30 pm · Mash</p>
-      <h2 id="features-h">Part 2: the codebase is clean, now they want features</h2>
-      <p>Your copy has every Part 1 bug fixed, with tests. The client's happy, and now they want something new. Pick one feature and take it all the way to a merged pull request.</p>
-    </div>
-
-    <div class="features" role="group" aria-label="Pick a feature">
-      <button class="feature" type="button" aria-pressed="true" data-feature="favourites">
-        <span class="tag">Recommended · small</span><h3>Favourites</h3>
-        <p>Signed-in shoppers can save products and see them on a Favourites page. One new table, a few endpoints, a heart button.</p>
-      </button>
-      <button class="feature" type="button" aria-pressed="false" data-feature="detail">
-        <span class="tag">Small to medium</span><h3>Product page</h3>
-        <p>Each product gets its own page with a bigger picture, description and Add to basket. The original brief said no; the client changed their mind.</p>
-      </button>
-      <button class="feature" type="button" aria-pressed="false" data-feature="rebrand">
-        <span class="tag">Stretch</span><h3>Rebrand the shop</h3>
-        <p>Turn it into a shoe or clothing shop: new catalogue, names and copy. More design than engineering. Good for show and tell.</p>
-      </button>
-    </div>
-
-    <ol class="steps">
-      <li><div class="step-body"><span class="time">15 min</span><h3>Grill the idea</h3>
-        <p>The skill asks question after question until the design has no loose ends. Keep answers short.</p>
-        <div class="cmd prompt"><pre data-prompt="grill"></pre></div></div></li>
-      <li><div class="step-body"><span class="time">5 min</span><h3>Turn it into a spec and tickets</h3>
-        <p>The spec captures what you agreed. Tickets break it into slices you can build one at a time.</p>
-        <div class="cmd prompt"><pre>/to-spec</pre></div>
-        <div class="cmd prompt"><pre>/to-tickets</pre></div></div></li>
-      <li><div class="step-body"><span class="time">20 min</span><h3>Build the smallest ticket, test first</h3>
-        <p><code>/implement</code> works red, green, refactor: a failing test first, then the code to pass it, then a review.</p>
-        <div class="cmd prompt"><pre data-prompt="implement"></pre></div></div></li>
-      <li><div class="step-body"><span class="time">10 min</span><h3>Open a pull request and review it</h3>
-        <p>Your repo has a <code>REVIEW.md</code> and a PR template. The review should cite file and line for every finding.</p>
-        <div class="cmd prompt"><pre>Run the backend tests and show me the output. Then commit this work on a new branch, push it, and open a pull request into my repo's main using .github/pull_request_template.md.</pre></div>
-        <div class="cmd prompt"><pre>Review the pull request against REVIEW.md. List findings most severe first, each with file:line.</pre></div>
-        <p>Fix what matters, then merge it yourself. That's the whole loop.</p></div></li>
-    </ol>
-  </section>
-
-  <section class="slide wrap" id="review" aria-labelledby="review-h">
-    <div class="section-head">
-      <p class="eyebrow">Code review when agents write the code</p>
-      <h2 id="review-h">Ask what could go wrong, and which check catches it</h2>
-      <p>At Anthropic, Claude writes most of the Claude Code codebase, and people can't read every line. So review becomes layers, and people put their attention where the risk is. From <a href="https://claude.dev/blog/solving-code-review-at-anthropic/" target="_blank" rel="noopener">Solving code review at Anthropic</a>.</p>
-    </div>
-    <div class="grid2">
-      <div class="panel"><h3>Before the PR</h3><p>The agent proves its work: runs the tests and shows the output, rather than saying it's done.</p></div>
-      <div class="panel"><h3>On every PR</h3><p>AI review against <code>REVIEW.md</code>, which says what failure looks like in this repo, caps nits and demands file:line evidence.</p></div>
-      <div class="panel"><h3>In the PR body</h3><p>How it was tested, how risky it is, and how to revert it.</p></div>
-      <div class="panel"><h3>The human call</h3><p>Approval scales with the risk of the change, not who wrote it.</p></div>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Risk</th><th>Examples</th><th>People who approve</th></tr></thead>
-        <tbody>
-          <tr><td>Low</td><td>Docs, copy, additive changes behind a flag</td><td>None once checks are green</td></tr>
-          <tr><td>Medium</td><td>Ordinary product changes</td><td>One</td></tr>
-          <tr><td>High</td><td>Auth, baskets and checkout, CI, releases</td><td>Two</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="slide wrap" id="resources" aria-labelledby="resources-h">
-    <div class="section-head">
-      <p class="eyebrow">8:45 pm · Show and tell, then keep going</p>
-      <h2 id="resources-h">Built something? Show the room</h2>
-      <p>Three people, five minutes each. After tonight, these are the places to go next.</p>
-    </div>
-    <div class="grid2">
-      <div class="panel"><h3>Skills</h3><ul>
-        <li><a href="https://github.com/mattpocock/skills" target="_blank" rel="noopener">mattpocock/skills</a>: every skill, with install notes</li>
-        <li><code>/ask-matt</code>: not sure which skill fits? Ask this one</li>
-        <li><code>/teach</code>: learn a topic over several sessions</li>
-        <li><code>/wayfinder</code>: plan work too big for one sitting</li>
-      </ul></div>
-      <div class="panel"><h3>Tonight's code</h3><ul>
-        <li><a href="https://github.com/mashjprime/perth-ai-mp-new-features" target="_blank" rel="noopener">Part 2 starting repo</a></li>
-        <li><a href="https://github.com/perth-ai/workshop-mp-skills-for-ai-native-devs" target="_blank" rel="noopener">Part 1 repo and bug reports</a></li>
-        <li><a href="https://claude.dev/blog/solving-code-review-at-anthropic/" target="_blank" rel="noopener">Solving code review at Anthropic</a></li>
-      </ul></div>
-    </div>
-  </section>
+  <div class="done">
+    <h2>You're ready when the shop shows products with pictures</h2>
+    <p class="muted">Next: <a href="skills.html">what each skill does, and the order to use them</a>.</p>
+  </div>
 </main>
 
-<footer>
-  <div class="wrap">Perth AI · hosted by Rafael Avigad and Mash · Part 1 materials by Rafael Avigad and Raj Saddi.</div>
-</footer>
-
+<script src="copy.js"></script>
 <script>
 (function () {
-  function store(key, value) {
-    try {
-      if (value === undefined) return localStorage.getItem(key);
-      localStorage.setItem(key, value);
-    } catch (e) { return null; }
-  }
-
-  // Copy buttons on every command and prompt
-  document.querySelectorAll('.cmd').forEach(function (box) {
-    var button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'copy';
-    button.textContent = 'Copy';
-    button.addEventListener('click', function () {
-      var text = box.querySelector('pre').textContent;
-      var done = function () { button.textContent = 'Copied'; setTimeout(function () { button.textContent = 'Copy'; }, 1500); };
-      var fallback = function () {
-        var range = document.createRange();
-        range.selectNodeContents(box.querySelector('pre'));
-        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
-        button.textContent = 'Press Ctrl+C';
-      };
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, fallback);
-      } else { fallback(); }
-    });
-    box.appendChild(button);
-  });
-
-  // OS tabs, defaulting to the visitor's platform
   var tabs = document.querySelectorAll('[role=tab]');
   function showOs(os) {
     tabs.forEach(function (t) { t.setAttribute('aria-selected', String(t.dataset.os === os)); });
     document.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.dataset.panel !== os; });
-    store('os', os);
+    document.querySelectorAll('[data-os-cmd]').forEach(function (c) { c.hidden = c.dataset.osCmd.split(' ').indexOf(os) < 0; });
+    try { localStorage.setItem('os', os); } catch (e) {}
   }
   tabs.forEach(function (t) { t.addEventListener('click', function () { showOs(t.dataset.os); }); });
-  var guess = /Mac/i.test(navigator.platform) ? 'mac' : /Linux/i.test(navigator.platform) && !/Android/i.test(navigator.userAgent) ? 'linux' : 'win';
-  showOs(store('os') || guess);
-
-  // Ready checklist
-  var boxes = document.querySelectorAll('#ready-list input');
-  function updateReady() {
-    var all = Array.prototype.every.call(boxes, function (b) { return b.checked; });
-    document.getElementById('ready-msg').hidden = !all;
-  }
-  boxes.forEach(function (b) {
-    b.checked = store('ready:' + b.id) === '1';
-    b.addEventListener('change', function () { store('ready:' + b.id, b.checked ? '1' : '0'); updateReady(); });
-  });
-  updateReady();
-
-  // Feature picker fills in the prompts
-  var prompts = {
-    favourites: {
-      grill: '/grill-me I want to add favourites to this shop: signed-in shoppers can save products and see them on a Favourites page. Grill me on the design. Keep each question short; we have about 15 minutes.',
-      implement: '/implement the smallest favourites ticket. Work test-first: show me the failing test before you write the code that makes it pass.'
-    },
-    detail: {
-      grill: '/grill-me I want to add a product page to this shop: each product gets its own page with a larger picture, the description and an Add to basket button. Grill me on the design. Keep each question short; we have about 15 minutes.',
-      implement: '/implement the smallest product page ticket. Work test-first: show me the failing test before you write the code that makes it pass.'
-    },
-    rebrand: {
-      grill: '/grill-me I want to rebrand this shop as a sneaker store: new catalogue, product names, images and copy, keeping the shopping flow. Grill me on the plan. Keep each question short; we have about 15 minutes.',
-      implement: '/implement the smallest rebrand ticket. Work test-first where there is behaviour to test, and show me the test output.'
-    }
-  };
-  var features = document.querySelectorAll('.feature');
-  function pick(name) {
-    features.forEach(function (f) { f.setAttribute('aria-pressed', String(f.dataset.feature === name)); });
-    document.querySelectorAll('[data-prompt]').forEach(function (pre) { pre.textContent = prompts[name][pre.dataset.prompt]; });
-    store('feature', name);
-  }
-  features.forEach(function (f) { f.addEventListener('click', function () { pick(f.dataset.feature); }); });
-  var saved = store('feature');
-  pick(prompts[saved] ? saved : 'favourites');
-
-  // Present mode: one section per screen, arrow keys to move
-  var slides = Array.prototype.slice.call(document.querySelectorAll('main > .hero, main > .slide'));
-  var current = 0;
-  var pager = document.getElementById('pager');
-  var presentBtn = document.getElementById('present');
-  function show(i) {
-    current = Math.max(0, Math.min(slides.length - 1, i));
-    slides.forEach(function (s, n) { s.classList.toggle('is-current', n === current); });
-    pager.textContent = (current + 1) + ' / ' + slides.length;
-    window.scrollTo(0, 0);
-  }
-  function setPresent(on) {
-    document.body.classList.toggle('present', on);
-    presentBtn.textContent = on ? 'Exit' : 'Present';
-    if (on) {
-      var here = slides.findIndex(function (s) { return s.getBoundingClientRect().bottom > 80; });
-      show(here < 0 ? 0 : here);
-    } else {
-      slides.forEach(function (s) { s.classList.remove('is-current'); });
-      slides[current].scrollIntoView();
-    }
-  }
-  presentBtn.addEventListener('click', function () { setPresent(!document.body.classList.contains('present')); });
-  document.addEventListener('keydown', function (e) {
-    if (!document.body.classList.contains('present')) return;
-    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); show(current + 1); }
-    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); show(current - 1); }
-    if (e.key === 'Escape') setPresent(false);
-  });
+  var saved = null;
+  try { saved = localStorage.getItem('os'); } catch (e) {}
+  var ua = navigator.userAgent;
+  var guess = /Mac/i.test(ua) && !/iPhone|iPad/i.test(ua) ? 'mac' : /Linux/i.test(ua) && !/Android/i.test(ua) ? 'linux' : 'win';
+  showOs(saved || guess);
 })();
 </script>
 </body>
