@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import bcrypt
 from jose import jwt
@@ -54,5 +54,5 @@ class AuthService:
 
     def _create_token(self, email: str) -> str:
         expire = timedelta(minutes=settings.jwt_expire_minutes)
-        payload = {"sub": email, "exp": datetime.utcnow() + expire}
+        payload = {"sub": email, "exp": datetime.now(timezone.utc) + expire}
         return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)

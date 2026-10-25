@@ -1,6 +1,6 @@
 import sqlite3
 from contextlib import contextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from models.entities import (
@@ -224,7 +224,7 @@ class DatabaseClient:
         ship_to_zip_code: str,
         items: list[tuple[int, str, str, float, int]],
     ) -> Order:
-        order_date = datetime.utcnow().isoformat()
+        order_date = datetime.now(timezone.utc).isoformat()
         with self._connection() as conn:
             cursor = conn.execute(
                 """
@@ -276,7 +276,7 @@ class DatabaseClient:
             return Order(
                 id=order_id,
                 buyer_id=buyer_id,
-                order_date=datetime.fromisoformat(order_date),
+                order_date=_parse_utc(order_date),
                 ship_to_street=ship_to_street,
                 ship_to_city=ship_to_city,
                 ship_to_state=ship_to_state,
@@ -357,7 +357,7 @@ class DatabaseClient:
         return Order(
             id=row["id"],
             buyer_id=row["buyer_id"],
-            order_date=datetime.fromisoformat(row["order_date"]),
+            order_date=_parse_utc(row["order_date"]),
             ship_to_street=row["ship_to_street"],
             ship_to_city=row["ship_to_city"],
             ship_to_state=row["ship_to_state"],
@@ -365,6 +365,14 @@ class DatabaseClient:
             ship_to_zip_code=row["ship_to_zip_code"],
             items=items,
         )
+
+
+def _parse_utc(value: str) -> datetime:
+    """Order dates are UTC. Older rows were stored without an offset."""
+    parsed = datetime.fromisoformat(value)
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
 
 
 def _row_to_catalog_item(row) -> CatalogItem:
