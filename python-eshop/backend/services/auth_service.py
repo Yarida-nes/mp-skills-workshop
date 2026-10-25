@@ -6,7 +6,7 @@ from jose import jwt
 from config import settings
 from db.client import DatabaseClient
 from db.seed import hash_password
-from services.basket_service import BasketService
+from services.basket_service import BasketService, parse_anonymous_basket_id
 
 
 class AuthService:
@@ -23,8 +23,7 @@ class AuthService:
 
         user = self.db.create_user(email, hash_password(password))
 
-        if anonymous_basket_id and anonymous_basket_id != user.email:
-            self.basket_service.transfer_basket(anonymous_basket_id, user.email)
+        self._merge_anonymous_basket(anonymous_basket_id, user.email)
 
         token = self._create_token(user.email)
         return token, user.email
@@ -36,11 +35,17 @@ class AuthService:
         if not user or not self._verify_password(password, user.password_hash):
             raise ValueError("Invalid email or password")
 
-        if anonymous_basket_id and anonymous_basket_id != user.email:
-            self.basket_service.transfer_basket(anonymous_basket_id, user.email)
+        self._merge_anonymous_basket(anonymous_basket_id, user.email)
 
         token = self._create_token(user.email)
         return token, user.email
+
+    def _merge_anonymous_basket(self, anonymous_basket_id: str | None, email: str) -> None:
+        if not anonymous_basket_id:
+            return
+        anonymous_id = parse_anonymous_basket_id(anonymous_basket_id)
+        if anonymous_id is not None:
+            self.basket_service.transfer_basket(anonymous_id, email)
 
     def _verify_password(self, password: str, password_hash: str) -> bool:
         return bcrypt.checkpw(

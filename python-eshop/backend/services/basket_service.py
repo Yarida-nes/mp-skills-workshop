@@ -1,9 +1,25 @@
+import uuid
+
 from db.client import DatabaseClient
 from models.schemas import BasketItemResponse, BasketResponse
 
 
 class EmptyBasketError(Exception):
     pass
+
+
+def parse_anonymous_basket_id(value: str) -> str | None:
+    """The canonical form of an anonymous basket id, or None if it isn't one.
+
+    Anonymous baskets are keyed by a client-generated UUID and signed-in
+    baskets by email, so only a UUID may ever address an anonymous basket.
+    """
+    try:
+        parsed = uuid.UUID(value)
+    except (ValueError, AttributeError, TypeError):
+        return None
+    canonical = str(parsed)
+    return canonical if canonical == value.strip().lower() else None
 
 
 class BasketService:
