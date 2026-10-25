@@ -1,6 +1,5 @@
-import bcrypt
-
 from db.client import DatabaseClient
+from services.passwords import hash_password
 
 BRANDS = ["Azure", ".NET", "Visual Studio", "SQL Server", "Other"]
 TYPES = ["Mug", "T-Shirt", "Pin"]
@@ -22,10 +21,6 @@ PRODUCTS = [
 
 DEMO_EMAIL = "demouser@perthai.com.au"
 DEMO_PASSWORD = "Pass@word1"
-
-
-def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
 def seed_database(db: DatabaseClient) -> None:

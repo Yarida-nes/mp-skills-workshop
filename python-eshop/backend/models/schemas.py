@@ -4,8 +4,8 @@ from typing import Annotated
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from pydantic_core import PydanticCustomError
 
-# bcrypt only looks at the first 72 bytes of a password.
-MAX_PASSWORD_BYTES = 72
+from services.passwords import MAX_PASSWORD_BYTES
+
 MAX_LINE_QUANTITY = 99
 
 LineQuantity = Annotated[int, Field(ge=0, le=MAX_LINE_QUANTITY)]

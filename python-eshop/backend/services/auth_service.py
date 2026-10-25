@@ -1,13 +1,11 @@
 from datetime import datetime, timedelta, timezone
 
-import bcrypt
 from jose import jwt
 
 from config import settings
 from db.client import DatabaseClient
-from models.schemas import MAX_PASSWORD_BYTES
-from db.seed import hash_password
 from services.basket_service import BasketService, parse_anonymous_basket_id
+from services.passwords import hash_password, verify_password
 
 
 class AuthService:
@@ -33,7 +31,7 @@ class AuthService:
         self, email: str, password: str, anonymous_basket_id: str | None = None
     ) -> tuple[str, str]:
         user = self.db.get_user_by_email(email)
-        if not user or not self._verify_password(password, user.password_hash):
+        if not user or not verify_password(password, user.password_hash):
             raise ValueError("Invalid email or password")
 
         self._merge_anonymous_basket(anonymous_basket_id, user.email)
@@ -47,13 +45,6 @@ class AuthService:
         anonymous_id = parse_anonymous_basket_id(anonymous_basket_id)
         if anonymous_id is not None:
             self.basket_service.transfer_basket(anonymous_id, email)
-
-    def _verify_password(self, password: str, password_hash: str) -> bool:
-        if len(password.encode("utf-8")) > MAX_PASSWORD_BYTES:
-            return False
-        return bcrypt.checkpw(
-            password.encode("utf-8"), password_hash.encode("utf-8")
-        )
 
     def _create_token(self, email: str) -> str:
         expire = timedelta(minutes=settings.jwt_expire_minutes)
