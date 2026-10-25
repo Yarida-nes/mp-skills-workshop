@@ -57,6 +57,12 @@ body { overflow: hidden; background: var(--paper); }
 .prompt b { color: #5cd8ff; font-weight: 500; }
 .prompt { border: 1px solid var(--line); }
 
+.flow { list-style: none; margin: 0; padding: 0; counter-reset: f; display: grid; gap: .45em; font-size: clamp(.95rem, 3.1cqmin, 1.7rem); }
+.flow li { counter-increment: f; display: grid; grid-template-columns: 1.7em auto 1fr; align-items: baseline; gap: .7em; }
+.flow li::before { content: counter(f); font: 700 .8em var(--display); width: 1.9em; height: 1.9em; border-radius: 50%; display: grid; place-items: center; background: var(--cta); color: var(--cta-ink); align-self: center; }
+.flow code { font: 500 1em var(--mono); color: var(--river); background: none; padding: 0; }
+.flow span { color: var(--muted); }
+@container (max-width: 34rem) { .flow li { grid-template-columns: 1.7em 1fr; } .flow span { grid-column: 2; } }
 .loop { display: flex; flex-wrap: wrap; gap: .5em; font: 700 clamp(1rem, 3.6cqmin, 2rem) var(--display); }
 .loop span { padding: .3em .75em; border-radius: 999px; background: var(--cta); color: var(--cta-ink); }
 .loop i { font-style: normal; color: var(--muted); align-self: center; }
@@ -129,7 +135,14 @@ body { overflow: hidden; background: var(--paper); }
     <section class="slide" data-name="loop">
       <p class="kicker">Tonight's loop</p>
       <p class="say">Slow down the thinking. <em>Speed up the building.</em></p>
-      <div class="loop"><span>Grill</span><i>→</i><span>Spec</span><i>→</i><span>Tickets</span><i>→</i><span>Test first</span><i>→</i><span>Review</span><i>→</i><span>Merge</span></div>
+      <ol class="flow">
+        <li><code>/grill-with-docs</code><span>agree what to build</span></li>
+        <li><code>/to-spec</code><span>write it down</span></li>
+        <li><code>/to-tickets</code><span>split it into tickets</span></li>
+        <li><code>/implement</code><span>test first, then code review</span></li>
+        <li><code>pr</code><span>the agent writes the PR</span></li>
+        <li><code>/retro</code><span>make the next run better</span></li>
+      </ol>
     </section>
 
     <section class="slide" data-name="copy" data-minutes="5">
