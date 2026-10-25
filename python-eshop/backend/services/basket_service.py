@@ -97,9 +97,6 @@ class BasketService:
 
         self.db.delete_basket(anonymous_basket.id)
 
-    def delete_basket(self, basket_id: int) -> None:
-        self.db.delete_basket(basket_id)
-
     def _to_response(self, basket) -> BasketResponse:
         items = [
             BasketItemResponse(

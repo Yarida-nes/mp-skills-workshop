@@ -211,11 +211,15 @@ class DatabaseClient:
 
     def delete_basket(self, basket_id: int) -> None:
         with self._connection() as conn:
-            conn.execute("DELETE FROM basket_items WHERE basket_id = ?", (basket_id,))
-            conn.execute("DELETE FROM baskets WHERE id = ?", (basket_id,))
+            self._delete_basket_rows(conn, basket_id)
 
-    def create_order(
+    def _delete_basket_rows(self, conn, basket_id: int) -> None:
+        conn.execute("DELETE FROM basket_items WHERE basket_id = ?", (basket_id,))
+        conn.execute("DELETE FROM baskets WHERE id = ?", (basket_id,))
+
+    def place_order(
         self,
+        basket_id: int,
         buyer_id: str,
         ship_to_street: str,
         ship_to_city: str,
@@ -224,6 +228,7 @@ class DatabaseClient:
         ship_to_zip_code: str,
         items: list[tuple[int, str, str, float, int]],
     ) -> Order:
+        """Record the order and empty its basket in a single transaction."""
         order_date = datetime.now(timezone.utc).isoformat()
         with self._connection() as conn:
             cursor = conn.execute(
@@ -273,6 +278,7 @@ class DatabaseClient:
                         units=units,
                     )
                 )
+            self._delete_basket_rows(conn, basket_id)
             return Order(
                 id=order_id,
                 buyer_id=buyer_id,
