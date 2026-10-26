@@ -145,13 +145,13 @@ body { overflow: hidden; background: var(--paper); }
       </ol>
     </section>
 
-    <section class="slide" data-name="copy" data-minutes="5">
+    <section class="slide" data-name="switch" data-minutes="5">
       <p class="kicker">Get the code</p>
       <div class="split">
-        <div class="qr" data-qr="template"></div>
+        <div class="qr" data-qr="part2"></div>
         <div style="display:grid;gap:1rem;min-width:0">
-          <p class="say">Make your own copy</p>
-          <p class="sub">Scan for the copy button and every step of tonight's loop. Clone it, start your agent in it, then run the setup skill once.</p>
+          <p class="say">Switch to <em>Part 2</em></p>
+          <p class="sub">Stash your Part 1 changes, then make your own <b>part-2</b> branch from perth-ai's <b>mash/part-2-new-features</b>. Scan for the commands for a clone or a fork, or a prompt that has your agent do it. Then run the setup skill once.</p>
           <p class="prompt"><b>/setup-matt-pocock-skills</b></p>
         </div>
       </div>
@@ -183,8 +183,8 @@ body { overflow: hidden; background: var(--paper); }
     <section class="slide" data-name="review" data-minutes="8">
       <p class="kicker">Step 4 · Review</p>
       <p class="say">What could go wrong, and <em>which check catches it?</em></p>
-      <p class="prompt">Run the tests and show me the output. Then open a PR into my main using the PR template, and review it against <b>REVIEW.md</b>.</p>
-      <p class="sub">The <b>pr</b> skill shapes the PR: a picture of the change, proof it works, and how risky it is to merge.</p>
+      <p class="prompt">Run the tests and show me the output. Then open a PR on my fork into my part-2 branch, not on perth-ai, using the PR template, and review it against <b>REVIEW.md</b>.</p>
+      <p class="sub">Your PR stays on your fork. The <b>pr</b> skill shapes it: a picture of the change, proof it works, and how risky it is to merge.</p>
     </section>
 
     <section class="slide" data-name="risk">
@@ -229,7 +229,7 @@ body { overflow: hidden; background: var(--paper); }
   var links = {
     install: SITE,
     skills: SITE + 'skills.html',
-    template: SITE + 'part2.html'
+    part2: SITE + 'part2.html#switch'
   };
 
   // QR codes drawn as SVG, dark modules on a white tile so phones read them in either theme

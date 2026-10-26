@@ -38,13 +38,37 @@
 <main class="wrap">
   <p class="note">On Codex, type <code>$</code> instead of <code>/</code>, for example <code>$grill-with-docs</code>. In an agent without commands, ask for the skill by name.</p>
   <ol class="steps">
-    <li><div class="step"><h2>Get your own copy of the shop</h2>
-      <a class="cta" href="https://github.com/new?template_name=perth-ai-mp-new-features&amp;template_owner=mashjprime" target="_blank" rel="noopener">Create my copy on GitHub</a>
-      <p>Clone it, start your agent in the folder, then run the setup skill once.</p>
-      <div class="cmd"><pre>gh repo clone YOUR-NAME/YOUR-REPO
-cd YOUR-REPO</pre></div>
+    <li id="switch"><div class="step"><h2>Switch to Part 2</h2>
+      <p>Part 2 lives on the <code>mash/part-2-new-features</code> branch. In the shop folder from Part 1, first keep your Part 1 changes safe:</p>
+      <div class="cmd"><pre>git stash -u</pre></div>
+      <p>Then pick the one that matches how you got the shop. Swap in your GitHub name.</p>
+      <div class="cmd"><span class="label">I cloned perth-ai</span><pre>gh repo fork --remote
+git fetch upstream mash/part-2-new-features
+git switch -c part-2 upstream/mash/part-2-new-features
+git push -u origin part-2
+gh repo set-default YOUR-NAME/workshop-mp-skills-for-ai-native-devs
+gh repo edit --enable-issues</pre></div>
+      <div class="cmd"><span class="label">I forked it</span><pre>git remote add upstream https://github.com/perth-ai/workshop-mp-skills-for-ai-native-devs
+git fetch upstream mash/part-2-new-features
+git switch -c part-2 upstream/mash/part-2-new-features
+git push -u origin part-2
+gh repo set-default YOUR-NAME/workshop-mp-skills-for-ai-native-devs
+gh repo edit --enable-issues</pre></div>
+      <p>Rather your agent did it? Paste this in:</p>
+      <div class="cmd prose"><pre>Switch this repo to Part 2 of the workshop. Stash any changes I have first. If origin is perth-ai/workshop-mp-skills-for-ai-native-devs, fork it with gh repo fork --remote. Make sure a remote called upstream points at perth-ai/workshop-mp-skills-for-ai-native-devs. Fetch its mash/part-2-new-features branch, create a local branch called part-2 from it, and push part-2 to my fork. Then run gh repo set-default with my fork and turn on issues there. Show me git remote -v and git status when you're done.</pre></div>
+      <p>Then start your agent in the folder and run the setup skill once on this branch.</p>
       <div class="cmd"><pre>/setup-matt-pocock-skills</pre></div>
-      <p>Already did this at setup? You're ahead. Need more help? See the <a href="./">setup page</a>.</p>
+      <details class="why"><summary>What does this do?</summary><dl>
+        <dt>Why stash?</dt>
+        <dd>Switching branches with uncommitted changes either fails or drags them along. <code>git stash pop</code> brings them back later. Committing them works too.</dd>
+        <dt>Why fetch from upstream?</dt>
+        <dd>A fork copies only <code>main</code> by default, so the Part 2 branch has to come from perth-ai.</dd>
+        <dt>Why the last two lines?</dt>
+        <dd>They point <code>gh</code> at your fork, so your tickets and PRs land there, not on perth-ai. Forks start with issues turned off.</dd>
+        <dt>"remote upstream already exists"?</dt>
+        <dd>Fine. <code>gh</code> added it when you cloned your fork. Carry on with the next line.</dd>
+      </dl></details>
+      <p>Starting fresh? Follow the <a href="./">setup page</a>.</p>
     </div></li>
 
     <li><div class="step"><h2>Grill: agree what to build</h2>
@@ -84,7 +108,8 @@ cd YOUR-REPO</pre></div>
     </div></li>
 
     <li><div class="step"><h2>Open a PR and review it</h2>
-      <div class="cmd prose"><pre>Run the tests and show me the output. Then open a PR into my main using the PR template, and review it against REVIEW.md.</pre></div>
+      <div class="cmd prose"><pre>Run the tests and show me the output. Then open a PR on my fork into my part-2 branch, not on perth-ai, using the PR template, and review it against REVIEW.md.</pre></div>
+      <p>Your PR stays on your fork. Nothing goes back to perth-ai.</p>
       <details class="why"><summary>What does this do?</summary><dl>
         <dt>Who writes the PR?</dt>
         <dd>The agent, using the <code>pr</code> skill: a small picture of the change, evidence that it works, and how risky it is to merge.</dd>

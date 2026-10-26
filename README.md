@@ -1,6 +1,6 @@
 # eShop: new features with Matt Pocock's skills
 
-The starting repo for Part 2 of the Perth AI workshop on Matt Pocock's skills for AI coding agents.
+This branch, `mash/part-2-new-features`, is the starting point for Part 2 of the Perth AI workshop on Matt Pocock's skills for AI coding agents. Part 1 runs from `main`.
 
 **Setup guide:** https://perth-ai.github.io/workshop-mp-skills-for-ai-native-devs/ · [skills cheat sheet](https://perth-ai.github.io/workshop-mp-skills-for-ai-native-devs/skills.html) · [slides](https://perth-ai.github.io/workshop-mp-skills-for-ai-native-devs/slides.html)
 
@@ -8,13 +8,37 @@ The starting repo for Part 2 of the Perth AI workshop on Matt Pocock's skills fo
 
 In Part 1 you were handed a buggy, vibe-coded online store and triaged it. Those bugs are now fixed, with tests. The client is happy, and now they want new features. Your job is to build one properly: grill the idea, write a spec, break it into tickets, implement it test-first, and get it reviewed and merged.
 
-## Get your own copy
+## Switch to Part 2
 
-1. Click **Use this template** → **Create a new repository** at the top of this page.
-2. Clone your new repo and open it in your coding agent.
-3. Run `/setup-matt-pocock-skills` in it. Choose GitHub issues if you're signed in to `gh`, or local files if not.
+Keep your Part 1 changes safe first with `git stash -u`, or commit them. Then swap in your GitHub name and run the block that matches how you got the shop.
 
-Use the template rather than a fork: your copy gets its own issues, and pull requests go to your own `main`.
+If you cloned perth-ai:
+
+```bash
+gh repo fork --remote
+git fetch upstream mash/part-2-new-features
+git switch -c part-2 upstream/mash/part-2-new-features
+git push -u origin part-2
+gh repo set-default YOUR-NAME/workshop-mp-skills-for-ai-native-devs
+gh repo edit --enable-issues
+```
+
+If you forked it:
+
+```bash
+git remote add upstream https://github.com/perth-ai/workshop-mp-skills-for-ai-native-devs
+git fetch upstream mash/part-2-new-features
+git switch -c part-2 upstream/mash/part-2-new-features
+git push -u origin part-2
+gh repo set-default YOUR-NAME/workshop-mp-skills-for-ai-native-devs
+gh repo edit --enable-issues
+```
+
+A fork copies only `main` by default, which is why the branch comes from `upstream`. If `git remote add` says `upstream` already exists, carry on. The last two lines point `gh` at your fork and turn on its issues, so your tickets and pull requests stay on your fork, not on perth-ai. Open PRs into your own `part-2` branch.
+
+Then run `/setup-matt-pocock-skills` in your coding agent. Choose GitHub issues if you're signed in to `gh`, or local files if not.
+
+Starting fresh? Use `gh repo fork perth-ai/workshop-mp-skills-for-ai-native-devs --clone`, `cd` into it, and run the "forked it" block.
 
 ## Run the app
 
@@ -41,4 +65,4 @@ cd python-eshop/backend && uv run pytest
 
 ## Credits
 
-The app comes from [perth-ai/workshop-mp-skills-for-ai-native-devs](https://github.com/perth-ai/workshop-mp-skills-for-ai-native-devs), Part 1 of this workshop by Rafael Avigad and Raj Saddi. Released under CC0, like the original.
+The app comes from Part 1 of this workshop, on `main`, by Rafael Avigad and Raj Saddi. Released under CC0, like the original.
