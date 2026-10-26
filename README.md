@@ -2,7 +2,7 @@
 
 The starting repo for Part 2 of the Perth AI workshop on Matt Pocock's skills for AI coding agents.
 
-**Setup guide:** https://mashjprime.github.io/perth-ai-mp-new-features/ · [skills cheat sheet](https://mashjprime.github.io/perth-ai-mp-new-features/skills.html) · [slides](https://mashjprime.github.io/perth-ai-mp-new-features/slides.html)
+**Setup guide:** https://perth-ai.github.io/workshop-mp-skills-for-ai-native-devs/ · [skills cheat sheet](https://perth-ai.github.io/workshop-mp-skills-for-ai-native-devs/skills.html) · [slides](https://perth-ai.github.io/workshop-mp-skills-for-ai-native-devs/slides.html)
 
 ## The story
 
