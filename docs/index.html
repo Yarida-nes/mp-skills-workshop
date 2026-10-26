@@ -83,27 +83,24 @@ gemini skills install https://github.com/mattpocock/skills.git --path skills/pro
       </dl></details>
     </div></li>
 
-    <li><div class="step"><h2>Get the shop on the Part 2 branch</h2>
-      <p>Fork it to your account, then switch to the Part 2 branch. Swap in your GitHub name.</p>
-      <div class="cmd"><pre>gh repo fork perth-ai/workshop-mp-skills-for-ai-native-devs --clone
-cd workshop-mp-skills-for-ai-native-devs
-git fetch upstream mash/part-2-new-features
-git switch -c part-2 upstream/mash/part-2-new-features
-git push -u origin part-2
-gh repo set-default YOUR-NAME/workshop-mp-skills-for-ai-native-devs
-gh repo edit --enable-issues</pre></div>
-      <p>Already have the shop from Part 1? Use <a href="part2.html#switch">Switch to Part 2</a> instead.</p>
+    <li><div class="step"><h2>Make your own copy of the shop</h2>
+      <a class="cta" href="https://github.com/new?template_name=workshop-mp-skills-for-ai-native-devs&amp;template_owner=perth-ai" target="_blank" rel="noopener">Create my copy on GitHub</a>
+      <p>Tick <b>Include all branches</b>, or Part 2 won't come with it. Then clone it and switch to Part 2. Swap in your GitHub name and the name you gave the repo.</p>
+      <div class="cmd"><pre>gh repo clone YOUR-NAME/YOUR-REPO
+cd YOUR-REPO
+git switch mash/part-2-new-features</pre></div>
+      <p>No <code>gh</code>? Use <code>git clone https://github.com/YOUR-NAME/YOUR-REPO</code>. Already made a copy in Part 1? <a href="part2.html#switch">Switch to Part 2</a>.</p>
       <details class="why"><summary>What does this do?</summary><dl>
         <dt>What is this repo?</dt>
-        <dd>A small online shop: a Python (FastAPI) backend with a SQLite database, and a React frontend. Its <code>main</code> branch is the buggy shop from Part 1. The <code>mash/part-2-new-features</code> branch has every bug fixed and 38 tests passing.</dd>
-        <dt>Why a fork?</dt>
-        <dd>Your fork's issues and pull requests are yours, so your agent can file tickets and open PRs without touching anyone else's work. The last two lines point <code>gh</code> at your fork, not perth-ai, and turn on issues, which forks start without.</dd>
-        <dt>What's <code>part-2</code>?</dt>
-        <dd>Your own branch, starting from the Part 2 code. You build on it and your PRs merge into it.</dd>
+        <dd>A small online shop: a Python (FastAPI) backend with a SQLite database, and a React frontend. <code>main</code> is the buggy shop from Part 1. <code>mash/part-2-new-features</code> has every bug fixed and 38 tests passing.</dd>
+        <dt>Why a copy?</dt>
+        <dd>The button makes a brand new repo in your account. Its issues and pull requests are yours, so your agent can file tickets and open PRs without touching anyone else's work.</dd>
+        <dt>Public or private?</dt>
+        <dd>Either works.</dd>
       </dl></details>
     </div></li>
 
-    <li><div class="step"><h2>Set up the skills in your fork</h2>
+    <li><div class="step"><h2>Set up the skills in your copy</h2>
       <p>Start your agent in the repo folder, then run the setup skill.</p>
       <div class="cmd" data-agent-panel="claude"><pre>claude
 /setup-matt-pocock-skills</pre></div>

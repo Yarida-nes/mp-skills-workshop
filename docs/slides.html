@@ -148,11 +148,14 @@ body { overflow: hidden; background: var(--paper); }
     <section class="slide" data-name="switch" data-minutes="5">
       <p class="kicker">Get the code</p>
       <div class="split">
-        <div class="qr" data-qr="part2"></div>
+        <div class="qr" data-qr="install"></div>
         <div style="display:grid;gap:1rem;min-width:0">
           <p class="say">Switch to <em>Part 2</em></p>
-          <p class="sub">Stash your Part 1 changes, then make your own <b>part-2</b> branch from perth-ai's <b>mash/part-2-new-features</b>. Scan for the commands for a clone or a fork, or a prompt that has your agent do it. Then run the setup skill once.</p>
-          <p class="prompt"><b>/setup-matt-pocock-skills</b></p>
+          <p class="sub">No copy yet? Scan, and tick <b>Include all branches</b>. Then switch, and run the setup skill once.</p>
+          <p class="prompt">git stash -u
+git fetch
+git switch mash/part-2-new-features
+<b>/setup-matt-pocock-skills</b></p>
         </div>
       </div>
     </section>
@@ -183,8 +186,8 @@ body { overflow: hidden; background: var(--paper); }
     <section class="slide" data-name="review" data-minutes="8">
       <p class="kicker">Step 4 · Review</p>
       <p class="say">What could go wrong, and <em>which check catches it?</em></p>
-      <p class="prompt">Run the tests and show me the output. Then open a PR on my fork into my part-2 branch, not on perth-ai, using the PR template, and review it against <b>REVIEW.md</b>.</p>
-      <p class="sub">Your PR stays on your fork. The <b>pr</b> skill shapes it: a picture of the change, proof it works, and how risky it is to merge.</p>
+      <p class="prompt">Run the tests and show me the output. Then open a PR in my repo into mash/part-2-new-features using the PR template, and review it against <b>REVIEW.md</b>.</p>
+      <p class="sub">The <b>pr</b> skill shapes the PR: a picture of the change, proof it works, and how risky it is to merge.</p>
     </section>
 
     <section class="slide" data-name="risk">
@@ -228,8 +231,7 @@ body { overflow: hidden; background: var(--paper); }
   var SITE = 'https://perth-ai.github.io/workshop-mp-skills-for-ai-native-devs/';
   var links = {
     install: SITE,
-    skills: SITE + 'skills.html',
-    part2: SITE + 'part2.html#switch'
+    skills: SITE + 'skills.html'
   };
 
   // QR codes drawn as SVG, dark modules on a white tile so phones read them in either theme
