@@ -8,10 +8,10 @@
 window.DECK = {
   slides: [
     {
-      name: 'welcome', part: 'Setup', scenic: true, qr: 'live',
+      name: 'welcome', part: 'Setup', scenic: true, qr: 'setup',
       kicker: 'While we get going',
       say: 'Scan in, <em>then get set up.</em>',
-      sub: 'This is tonight’s remote for Part 1: polls, quick checks and questions. The setup guide is in there too.'
+      sub: 'Work down the setup guide, and put your hand up if you get stuck. Keep the page open: the live link at the top is tonight’s remote for polls and questions.'
     },
     {
       name: 'tonight', part: 'Setup', scenic: true,

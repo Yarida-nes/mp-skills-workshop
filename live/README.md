@@ -18,16 +18,25 @@ The slides, polls and quick checks are all in `docs/live/deck.js`. Edit that one
 
 ## Deploy (Cloudflare)
 
-From this folder, on a machine signed in to Cloudflare:
+It deploys to the Perth AI Cloudflare account at **https://skills.perthai.org**. perthai.org's DNS lives in that account, so Wrangler adds the subdomain and its certificate on the first deploy.
+
+From this folder, signed in to Cloudflare as someone with access to the Perth AI account:
 
 ```sh
 npm install
 npx wrangler login                 # once, opens the browser
-npx wrangler deploy                # prints https://skills-night-live.<account>.workers.dev
+npx wrangler whoami                # check the Perth AI account is listed
+npx wrangler deploy                # pick the Perth AI account if asked
 npx wrangler secret put HOST_KEY   # paste a long random word; this is the host password
 ```
 
-Then open `https://skills-night-live.<account>.workers.dev/live/screen.html?key=<that word>` on the projector.
+If your login sees more than one account, set the Perth AI one first: copy its Account ID from `wrangler whoami`, then run `set CLOUDFLARE_ACCOUNT_ID=<id>` (Windows) or `export CLOUDFLARE_ACCOUNT_ID=<id>` before deploying.
+
+Then open `https://skills.perthai.org/live/screen.html?key=<that word>` on the projector.
+
+- `skills.perthai.org` is the setup guide. While the room is live, it shows a "The session is live" banner and a Live link in the menu.
+- `skills.perthai.org/join` goes straight to the phone page.
+- To use a different subdomain, change `routes` in `wrangler.jsonc`. Remove `routes` to fall back to a `workers.dev` address.
 
 The Worker serves all of `docs/` as static files and runs one Durable Object for the room (free plan is fine).
 Votes and questions survive a redeploy. To start clean after a rehearsal, use **Clear all votes and questions** on the host remote.

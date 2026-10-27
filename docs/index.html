@@ -23,6 +23,12 @@ main > .tabs { margin-top: 1.5rem; }
 .extra > .step { padding: 0 1.2rem 1.2rem; gap: .8rem; }
 .extra .tabs { margin-top: 0; }
 .extra h3 { font-size: 1.05rem; margin-top: .6rem; }
+/* Banner to the live session, shown only when the live Worker serves the site */
+.live-cta { display: flex; align-items: center; gap: .8rem; margin-top: 1.25rem; padding: .9rem 1rem; border-radius: 14px; background: var(--band); color: var(--band-ink); text-decoration: none; box-shadow: inset 0 0 0 2px var(--cta); }
+.live-cta[hidden] { display: none; }
+.live-cta b { color: var(--cta); }
+.live-cta .go { margin-left: auto; font: 700 1.3rem var(--display); color: var(--cta); }
+.live-cta .dot { flex: none; width: .7rem; height: .7rem; border-radius: 50%; background: #3ddc97; box-shadow: 0 0 0 4px #3ddc9733; }
 </style>
 </head>
 <body>
@@ -34,6 +40,7 @@ main > .tabs { margin-top: 1.5rem; }
       <a href="part1.html">Part 1</a>
       <a href="part2.html">Part 2</a>
       <a href="skills.html">Skills</a>
+      <a href="live/" data-live hidden>Live</a>
     </nav>
   </div>
 </header>
@@ -48,6 +55,12 @@ main > .tabs { margin-top: 1.5rem; }
 </div>
 
 <main class="wrap">
+
+  <a class="live-cta" href="live/" data-live hidden>
+    <span class="dot" aria-hidden="true"></span>
+    <span><b>The session is live.</b> Vote, answer quick checks and ask questions from your phone.</span>
+    <span class="go" aria-hidden="true">→</span>
+  </a>
 
   <div class="tabs" role="tablist" aria-label="Your coding agent">
     <button role="tab" id="agent-claude" aria-selected="true" type="button" data-agent="claude">Claude Code</button>
@@ -239,5 +252,6 @@ curl -LsSf https://astral.sh/uv/install.sh | sh</pre></div>
   showOs(saved || guess);
 })();
 </script>
+<script src="site-live.js"></script>
 </body>
 </html>

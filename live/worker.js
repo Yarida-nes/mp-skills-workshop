@@ -15,6 +15,7 @@ export default {
       if (request.headers.get('Upgrade') !== 'websocket') return new Response('Expected a WebSocket', { status: 426 });
       return env.ROOM.get(env.ROOM.idFromName('skills-night')).fetch(request);
     }
+    if (url.pathname === '/join' || url.pathname === '/live') return Response.redirect(new URL('/live/', url), 302);
     if (url.pathname === '/api/health') return Response.json({ ok: true, host: Boolean(env.HOST_KEY) });
     return env.ASSETS.fetch(request);
   }
