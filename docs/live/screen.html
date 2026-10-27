@@ -142,6 +142,11 @@ body { overflow: hidden; background: var(--paper); }
 .qa-list .ups { font: 600 .9em var(--mono); color: var(--sun); text-align: right; }
 .qa-list small { display: block; color: var(--muted); font-size: .65em; margin-top: .2em; }
 .qa-list .empty { display: block; color: var(--muted); }
+.split.qa { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+.split.qa .qr { width: clamp(7rem, 22cqmin, 13rem); }
+.split.qa .say { font-size: clamp(1.8rem, 7cqmin, 4.5rem); }
+.split.qa .sub { font-size: clamp(.95rem, 2.8cqmin, 1.5rem); }
+.split.qa .qa-list { grid-column: 1 / -1; max-width: none; }
 
 .egg-link { font: 500 clamp(.75rem, 2cqmin, 1.05rem) var(--mono); color: var(--muted); display: flex; align-items: center; gap: .6em; }
 .egg-link img { height: 1.6em; image-rendering: pixelated; }
@@ -214,7 +219,7 @@ body { overflow: hidden; background: var(--paper); }
     if (s.egg) h += '<p class="egg-link"><img alt="" data-sprite="run1">Bored? Jump the hallucinations at perthai.org/quokka-run</p>';
     if (s.qr) {
       var side = '<p class="say">' + s.say + '</p>' + (s.sub ? '<p class="sub">' + s.sub + '</p>' : '') + (s.prompt ? '<p class="prompt">' + s.prompt + '</p>' : '') + '<p class="url">' + esc(shortUrl(links[s.qr])) + '</p>';
-      h = '<p class="kicker">' + s.kicker + '</p><div class="split"><div class="qr">' + qrSvg(links[s.qr]) + '</div><div>' + side + '</div></div>';
+      h = '<p class="kicker">' + s.kicker + '</p><div class="split' + (s.qa ? ' qa' : '') + '"><div class="qr">' + qrSvg(links[s.qr]) + '</div><div>' + side + '</div>' + (s.qa ? '<div class="qa-list" data-qa></div>' : '') + '</div>';
     }
     return h;
   }
@@ -300,7 +305,7 @@ body { overflow: hidden; background: var(--paper); }
       var qs = (state ? state.questions : []).filter(function (q) { return !q.done; }).sort(function (a, b) { return b.ups - a.ups || a.ts - b.ts; }).slice(0, 6);
       list.innerHTML = qs.length ? qs.map(function (q) {
         return '<div><span class="ups">▲ ' + q.ups + '</span><span>' + esc(q.text) + (q.name ? '<small>' + esc(q.name) + '</small>' : '') + '</span></div>';
-      }).join('') : '<span class="empty">' + (live ? 'Ask on your phone: ' + esc(shortUrl(links.live)) : 'Hands up, and we’ll come to you.') + '</span>';
+      }).join('') : '<span class="empty">' + (live ? 'Ask on your phone: ' + esc(shortUrl(links.live)) : 'Questions asked on phones show up here, most votes first.') + '</span>';
     }
   }
   function explain(p) {

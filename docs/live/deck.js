@@ -4,7 +4,7 @@
 //          add answer and explain for a quick check, revealed with V
 //   write: { q, placeholder }                     a short written answer, shown as a wall on screen
 // minutes sets the countdown the host starts with T. qr names a link from DECK.links.
-// Part 1 follows Raf's handout (workshop/handout.html on raf/feature/workbook), cut to fit an hour.
+// Part 1 follows the Part 1 handout (workshop/handout.html on raf/feature/workbook), cut to fit an hour.
 window.DECK = {
   slides: [
     {
@@ -17,13 +17,13 @@ window.DECK = {
       name: 'tonight', part: 'Setup', scenic: true,
       kicker: 'Perth AI · Skills for AI-native devs',
       say: 'Slow down the thinking. <em>Speed up the building.</em>',
-      agenda: [['6:00', 'Part 1 · Raf', 'Fix a buggy shop'], ['7:00', 'Pizza', ''], ['7:30', 'Part 2 · Mash', 'Build a feature'], ['8:30', 'Q&A, then demos', '']]
+      agenda: [['1', 'Part 1', 'Fix a buggy shop'], ['2', 'Pizza', ''], ['3', 'Part 2', 'Build a feature'], ['4', 'Q&A, then demos', '']]
     },
 
-    // Part 1, Raf: about 60 minutes
+    // Part 1: about 60 minutes
     {
       name: 'part1', part: 'Part 1', scenic: true,
-      kicker: 'Part 1 · Raf',
+      kicker: 'Part 1',
       say: 'The shop is buggy. <em>Let’s find out why.</em>'
     },
     {
@@ -190,14 +190,14 @@ window.DECK = {
     {
       name: 'pizza', part: 'Break', scenic: true, minutes: 30, egg: true,
       kicker: 'Break',
-      say: 'Pizza. <em>Back at 7:30.</em>',
+      say: 'Pizza <em>break.</em>',
       sub: 'Got a question for later? Ask it on your phone, and vote up the ones you want answered.'
     },
 
-    // Part 2, Mash: hands on, so no voting
+    // Part 2: hands on, so no voting
     {
       name: 'part2', part: 'Part 2', scenic: true,
-      kicker: 'Part 2 · Mash',
+      kicker: 'Part 2',
       say: 'The codebase is clean. <em>Now they want features.</em>'
     },
     {
@@ -273,7 +273,7 @@ window.DECK = {
       sub: 'Read the evidence, fix what matters, merge. Then <b>/retro</b>, in the same session, to make the next run better.'
     },
 
-    // Wrap-up: Raf's "beyond today", then questions and demos
+    // Wrap-up: "beyond today" from the handout, then questions and demos
     {
       name: 'beyond', part: 'Wrap-up',
       kicker: 'Beyond tonight',
@@ -282,9 +282,10 @@ window.DECK = {
       poll: { q: 'Pick 1 to 3 things you’ll actually try this week.', multi: true, options: ['/teach on code I know well', '/grill-with-docs on a personal project', '/wayfinder on something too big for one sitting', 'Write a mini-skill of my own', 'Share this workshop with a teammate', 'Something else'] }
     },
     {
-      name: 'qa', part: 'Q&A', qa: true,
+      name: 'qa', part: 'Q&A', qa: true, qr: 'live',
       kicker: 'Q&A',
-      say: 'Your questions'
+      say: 'Your questions',
+      sub: 'Ask on your phone and vote up the ones you want answered. Most votes first.'
     },
     {
       name: 'showtell', part: 'Demos', scenic: true, qr: 'skills',
