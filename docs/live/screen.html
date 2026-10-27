@@ -218,7 +218,7 @@ body { overflow: hidden; background: var(--paper); }
     if (s.qa) h += '<div class="qa-list" data-qa></div>';
     if (s.egg) h += '<p class="egg-link"><img alt="" data-sprite="run1">Bored? Jump the hallucinations at perthai.org/quokka-run</p>';
     if (s.qr) {
-      var side = '<p class="say">' + s.say + '</p>' + (s.sub ? '<p class="sub">' + s.sub + '</p>' : '') + (s.prompt ? '<p class="prompt">' + s.prompt + '</p>' : '') + '<p class="url">' + esc(shortUrl(links[s.qr])) + '</p>';
+      var side = '<p class="say">' + s.say + '</p>' + (s.sub ? '<p class="sub">' + s.sub + '</p>' : '') + (s.prompt ? '<p class="prompt">' + s.prompt + '</p>' : '') + '<p class="url">' + esc(s.qr === 'slack' ? 'perthai.slack.com' : shortUrl(links[s.qr])) + '</p>';
       h = '<p class="kicker">' + s.kicker + '</p><div class="split' + (s.qa ? ' qa' : '') + '"><div class="qr">' + qrSvg(links[s.qr]) + '</div><div>' + side + '</div>' + (s.qa ? '<div class="qa-list" data-qa></div>' : '') + '</div>';
     }
     return h;
@@ -398,14 +398,19 @@ body { overflow: hidden; background: var(--paper); }
 
   // Quokka Run easter eggs: one quokka crosses the skyline now and then on scenic slides, hopping a hallucination;
   // the Konami code sends a whole parade
+  // Each run cleans itself up on a timer as well as at the end of its animation, because a hidden tab pauses
+  // animation frames but not timers, and stranded quokkas used to pile up at the left edge
   function run(delay, withBug) {
     var art = Pixel(), w = stage.clientWidth || innerWidth;
     var q = document.createElement('img');
     q.className = 'runner'; q.alt = ''; q.src = art.run1;
+    q.style.transform = 'translateX(-100px)';
     deckEl.appendChild(q);
     var bug = null, bugX = w * (0.35 + Math.random() * 0.4);
     if (withBug) { bug = document.createElement('img'); bug.className = 'runner bug'; bug.alt = ''; bug.src = art.bug; bug.style.transform = 'translateX(' + bugX + 'px)'; deckEl.appendChild(bug); }
     var start = null, frame = 0, dur = 7000;
+    function done() { q.remove(); if (bug) bug.remove(); }
+    setTimeout(done, delay + dur + 1500);
     function step(ts) {
       if (start === null) start = ts + delay;
       var p = (ts - start) / dur;
@@ -414,13 +419,16 @@ body { overflow: hidden; background: var(--paper); }
       if (bug && Math.abs(x + 20 - bugX) < 70) { lift = Math.sin((x + 90 - bugX) / 140 * Math.PI) * 60; q.src = art.jump; }
       else if (++frame % 8 === 0) q.src = q.src === art.run1 ? art.run2 : art.run1;
       q.style.transform = 'translate(' + x + 'px,' + (-Math.max(lift, 0)) + 'px)';
-      if (p < 1) requestAnimationFrame(step); else { q.remove(); if (bug) bug.remove(); }
+      if (p < 1) requestAnimationFrame(step); else done();
     }
     requestAnimationFrame(step);
   }
   function parade() { for (var i = 0; i < 7; i++) run(i * 450, i === 3); }
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    setInterval(function () { if (slides[current].scenic && Math.random() < 0.5) run(0, true); }, 40000);
+    setInterval(function () {
+      if (document.hidden || deckEl.querySelector('.runner') || !slides[current].scenic || Math.random() < 0.5) return;
+      run(0, true);
+    }, 40000);
   }
   document.querySelectorAll('[data-sprite]').forEach(function (img) { img.src = Pixel()[img.dataset.sprite]; });
 

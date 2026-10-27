@@ -288,10 +288,11 @@ window.DECK = {
       sub: 'Ask on your phone and vote up the ones you want answered. Most votes first.'
     },
     {
-      name: 'showtell', part: 'Demos', scenic: true, qr: 'skills',
+      name: 'showtell', part: 'Demos', scenic: true, qr: 'slack',
       kicker: 'Show and tell',
       say: 'What did you build?',
-      sub: 'Show us where you got to. Scan for every skill and when to use it.'
+      sub: 'Show us where you got to. Then keep the conversation going in the Perth AI Slack.',
+      button: ['slack', 'Join the Perth AI Slack']
     }
   ],
 
@@ -303,7 +304,8 @@ window.DECK = {
       live: new URL('live/', root).href,
       setup: root.href,
       skills: new URL('skills.html', root).href,
-      issues: 'https://github.com/perth-ai/workshop-mp-skills-for-ai-native-devs/issues'
+      issues: 'https://github.com/perth-ai/workshop-mp-skills-for-ai-native-devs/issues',
+      slack: 'https://join.slack.com/t/perthai/shared_invite/zt-4em6mnqt0-q3FFgygYANQEkfUfNLiJ8g'
     };
   }
 };

@@ -152,6 +152,7 @@ textarea { min-height: 5.5rem; resize: vertical; }
       if (s.link === 'issues') $('current').insertAdjacentHTML('beforeend', '<p><a class="btn ghost" href="' + links.issues + '">Open the bug reports</a></p>');
       if (s.qa) $('current').insertAdjacentHTML('beforeend', '<p><button class="btn" type="button" id="goto-qs">Ask or vote</button></p>');
       if (s.qa) $('goto-qs').onclick = function () { tab('qs'); };
+      if (s.button) $('current').insertAdjacentHTML('beforeend', '<p><a class="btn" href="' + links[s.button[0]] + '" target="_blank" rel="noopener">' + esc(s.button[1]) + '</a></p>');
       if (s.egg) $('current').insertAdjacentHTML('beforeend', '<p><a class="btn ghost" href="https://perthai.org/quokka-run">Play Quokka Run while you eat</a></p>');
     }
     renderPoll(s);
