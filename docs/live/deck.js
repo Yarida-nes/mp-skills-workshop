@@ -1,14 +1,17 @@
 // Skills Night: the one script for the night. The projector, the host remote and every phone render from this list.
-// A slide may carry a poll ({ q, options, multi }) or a quiz (a poll with an answer and an explain line).
+// A slide may carry one thing for phones to do:
+//   poll:  { q, options, multi }                  tap to vote, bars on screen
+//          add answer and explain for a quick check, revealed with V
+//   write: { q, placeholder }                     a short written answer, shown as a wall on screen
 // minutes sets the countdown the host starts with T. qr names a link from DECK.links.
+// Part 1 follows Raf's handout (workshop/handout.html on raf/feature/workbook), cut to fit an hour.
 window.DECK = {
   slides: [
     {
       name: 'welcome', part: 'Setup', scenic: true, qr: 'live',
       kicker: 'While we get going',
       say: 'Scan in, <em>then get set up.</em>',
-      sub: 'Your phone is tonight’s remote: polls, quick checks and questions. The setup guide is in there too.',
-      poll: { q: 'Which coding agent are you using tonight?', options: ['Claude Code', 'Codex', 'GitHub Copilot', 'Cursor', 'Something else', 'Still installing'] }
+      sub: 'This is tonight’s remote for Part 1: polls, quick checks and questions. The setup guide is in there too.'
     },
     {
       name: 'tonight', part: 'Setup', scenic: true,
@@ -24,31 +27,45 @@ window.DECK = {
       say: 'The shop is buggy. <em>Let’s find out why.</em>'
     },
     {
+      name: 'room', part: 'Part 1',
+      kicker: 'Who’s in the room',
+      say: 'How comfortable are you <em>on the command line?</em>',
+      poll: { q: 'How comfortable are you with the command line?', options: ['What’s a command line?', 'Beginner', 'Intermediate', 'Advanced'] }
+    },
+    {
       name: 'warmup', part: 'Part 1', minutes: 5,
       kicker: 'Warm-up',
       say: 'Which could you <em>explain to a friend?</em>',
-      sub: 'Tick every one you could. Nobody sees who ticked what.',
-      poll: { q: 'Which could you explain to a friend?', multi: true, options: ['LLM', 'Token', 'Context window', 'Agent', 'Harness', 'Skill', 'Shell', 'TUI', 'Markdown'] }
+      sub: 'Tick every one you could. If you’re not sure, leave it. We’ll explain the ones the room is least sure of.',
+      poll: { q: 'Which could you explain to a friend?', multi: true, options: ['AI', 'LLM', 'Token', 'Agent', 'Harness', 'Markdown', 'Shell', 'TUI', 'Skill', 'Context window'] }
     },
     {
       name: 'scenario', part: 'Part 1',
       kicker: 'The scenario',
       say: 'A decade-old C# shop, <em>vibe-coded into Python.</em>',
-      sub: 'The owners aren’t engineers. It mostly works, and it’s pretty buggy. They won’t start again, because the styling was real investment, so they’ve brought us in to fix it.'
+      sub: 'The owners are commercial people, not engineers. They rewrote it with tools like the ones you’re holding. It mostly works. It’s also pretty buggy.',
+      cards: [['Keep', 'The styling, which was real investment, and the shopping flow that works.'], ['Fix', 'The defects. Then set up a better way of working, so they stop arriving.']]
     },
     {
       name: 'run', part: 'Part 1', minutes: 10,
       kicker: 'Your turn',
       say: 'Run the shop. <em>Click around.</em>',
-      prompt: 'cd python-eshop/backend && uv sync && uv run python run.py\ncd python-eshop/frontend && npm install && npm run dev',
-      sub: 'Browse, add to the basket, check out, look at your orders. Notice what feels off.',
-      poll: { q: 'First impressions?', options: ['Looks fine to me', 'A few things feel off', 'Something’s clearly broken', 'Can’t get it running'] }
+      prompt: 'cd python-eshop/backend\nuv sync\nuv run python run.py\n\ncd python-eshop/frontend\nnpm install\nnpm run dev',
+      chips: ['backend running', 'frontend running', 'logged in as the demo user', 'catalog → basket → checkout → orders'],
+      write: { q: 'First impressions: what feels solid, and where did something feel off?', placeholder: 'Even before you know it’s officially a bug' }
     },
     {
       name: 'retro', part: 'Part 1', minutes: 5,
-      kicker: 'Retro',
+      kicker: 'Retro: what went wrong?',
       say: 'Why does vibe-coded software <em>end up like this?</em>',
-      poll: { q: 'What do you think went wrong? Tick all you suspect.', multi: true, options: ['No shared spec', 'No plan before coding', 'No tests', 'Context ran out', 'No code review', 'One-shot prompts', 'Nobody could read the code'] }
+      poll: { q: 'Tick the failure modes you suspect played a part.', multi: true, options: ['No shared spec', 'No plan before coding', 'No tests', 'Context ran out', 'No code review', 'One-shot prompts', 'Couldn’t read the code', 'Something else'] }
+    },
+    {
+      name: 'differently', part: 'Part 1', minutes: 5,
+      kicker: 'Retro: what went wrong?',
+      say: 'How would <em>you</em> have done it differently?',
+      sub: 'A sentence or two, then we open the floor.',
+      write: { q: 'How would you have approached it differently?', placeholder: 'A sentence or two' }
     },
     {
       name: 'gut', part: 'Part 1',
@@ -58,78 +75,117 @@ window.DECK = {
     },
     {
       name: 'skills', part: 'Part 1',
-      kicker: 'Enter skills',
+      kicker: 'Introducing skills',
       say: 'Reusable workflows that sit <em>on top of the model.</em>',
-      sub: 'A skill is a folder with a SKILL.md: a short header that says when to use it, then the instructions. Claude Code, Codex, Copilot and others all read them.',
-      cards: [['Helps', 'Forces understanding before code, and gives review something fixed to check against.'], ['Doesn’t', 'Replace judgement. A skill is only as good as the choice to use it.']]
+      sub: 'Matt Pocock’s skills are aimed squarely at the failure modes you just ticked. Claude Code, Codex, Copilot and others all read them.',
+      cards: [['Helps', 'Forces understanding before code, gives review a fixed point to check against, and turns vibing into something repeatable.'], ['Gaps', 'Doesn’t replace judgement about scope. A skill is only as good as whoever chooses when to use it.']]
     },
     {
       name: 'check1', part: 'Part 1',
-      kicker: 'Quick check',
+      kicker: 'Quick check 1',
       say: 'Do skills run <em>automatically</em> when relevant?',
       poll: {
         q: 'Do skills run automatically when relevant?', options: ['Always', 'Never', 'It depends'], answer: 2,
-        explain: 'It depends on the skill. Triage’s header says <code>disable-model-invocation: true</code>, so you call it yourself. Check each one.'
+        explain: 'It depends on the harness and the skill. Most of Matt’s skills wait for you to call them; some the model can pick by itself. Triage opts out in both:',
+        code: '# triage/SKILL.md\ndisable-model-invocation: true\n\n# Codex\npolicy:\n  allow_implicit_invocation: false'
       }
     },
     {
       name: 'check2', part: 'Part 1',
-      kicker: 'Quick check',
+      kicker: 'Quick check 2',
       say: 'A skill loads everything it links to, <em>all at once.</em>',
       poll: {
-        q: 'A skill loads everything it links to, all at once.', options: ['True', 'False'], answer: 1,
-        explain: 'False. The agent reads the header first, the body when the skill is used, and linked files only when it needs them. Your context window stays clear.'
+        q: 'Skills load all the information from their links at once.', options: ['True', 'False'], answer: 1,
+        explain: 'False. Skills load progressively: the header first, the instructions when the skill is used, and linked files only as needed. That keeps your context window under control.'
       }
+    },
+    {
+      name: 'frontmatter', part: 'Part 1', minutes: 5,
+      kicker: 'Look inside one',
+      say: 'The header is <em>the label on the folder.</em>',
+      prompt: '---\nname: triage\ndescription: Move an issue from vague to ready for an agent…\ndisable-model-invocation: true\n---\n<b># Everything below loads only when the skill runs</b>',
+      sub: 'With your neighbour, open one skill’s SKILL.md. What does the header declare, and where did installing it put the files?'
+    },
+    {
+      name: 'shortlist', part: 'Part 1',
+      kicker: 'Tonight’s shortlist',
+      say: 'Go deep on a few, <em>not a tour of all of them.</em>',
+      cards: [['/ask-matt', 'The router. Describe your situation and it points you at the skill that fits.'], ['/grill-with-docs · must have', 'A relentless interview about your plan. It writes down what you agree, and forces understanding before anyone edits code.']],
+      poll: { q: 'Which 2 or 3 would you add?', multi: true, options: ['/triage: vague report to clear brief', '/wayfinder: a map for work too big for one sitting', 'code-review: a fixed point to review against', '/implement: build, check, repeat', 'prototype: a throwaway spike to de-risk'] }
+    },
+    {
+      name: 'setup', part: 'Part 1', minutes: 5,
+      kicker: 'Practical 1 · Set up',
+      say: 'Install them, then <em>know what that did.</em>',
+      prompt: '<b>/setup-matt-pocock-skills</b>',
+      sub: 'On Codex, type <b>$</b> instead of <b>/</b>. In an agent without commands, ask for the skill by name.',
+      poll: { q: 'Tick each one once it’s true for you.', multi: true, options: ['I can point to where the skill files live', 'I checked which skills I call and which the model can pick', 'Skills add to the model; they don’t replace judgement', 'I get why the header loads before the body'] }
     },
     {
       name: 'loop1', part: 'Part 1',
       kicker: 'Part 1’s loop',
       say: 'Understand it <em>before you touch it.</em>',
-      flow: [['/triage', 'decide what a report needs'], ['diagnosing-bugs', 'make it fail on demand'], ['/implement', 'test first, then fix'], ['/retro', 'ask why it got in']],
-      sub: 'On Codex, type <b>$</b> instead of <b>/</b>. In an agent without commands, ask for the skill by name.'
+      flow: [['/triage', 'decide what a report needs'], ['diagnosing-bugs', 'make it fail on demand'], ['/implement', 'test first, then fix'], ['/retro', 'ask why it got in']]
     },
     {
-      name: 'reports', part: 'Part 1', minutes: 5, qr: 'issues',
-      kicker: 'Step 1 · Read the reports',
+      name: 'reports', part: 'Part 1', minutes: 5, link: 'issues',
+      kicker: 'Practical 2 · Pick a bug',
       say: 'Some are vague, some are wrong, <em>some are real.</em>',
-      sub: 'The bug reports are GitHub issues written by “customers”. Pick one.',
-      poll: { q: 'Before you look at the code: which layer do you suspect?', options: ['Frontend (React)', 'Router (FastAPI)', 'Service (rules)', 'DB client / SQL', 'Not sure yet'] }
+      sub: 'GitHub issues written by “customers”. Pick one, or your own, and describe it in your own words first.',
+      layers: [['Frontend', 'frontend/src/', 'UI, state, API calls'], ['Router', 'backend/routers/', 'HTTP, validation, auth headers'], ['Service', 'backend/services/', 'Basket merge, checkout rules'], ['DB client', 'backend/db/client.py', 'All the SQL']],
+      poll: { q: 'Before the skill: which layer do you suspect?', options: ['Frontend (React)', 'Router (FastAPI)', 'Service (rules)', 'DB client / SQL', 'Not sure yet'] }
     },
     {
       name: 'triage', part: 'Part 1', minutes: 8,
-      kicker: 'Step 2 · Triage',
+      kicker: 'Practical 2 · Triage',
       say: 'Decide what it needs, <em>before any code.</em>',
       prompt: '<b>/triage</b> issue #1',
       chips: ['needs-triage', 'needs-info', 'ready-for-agent', 'ready-for-human', 'wontfix'],
-      sub: 'An agent will happily “fix” a bug that isn’t one. Triage is where you catch that, cheaply.'
+      sub: 'An agent will happily “fix” a bug that isn’t one. Triage is where you catch that, cheaply.',
+      write: { q: 'What did triage surface that you hadn’t considered?', placeholder: 'One thing it asked or found' }
     },
     {
       name: 'diagnose', part: 'Part 1', minutes: 10,
-      kicker: 'Step 3 · Find the cause',
+      kicker: 'Practical 2 · Find the cause',
       say: 'Make it fail <em>on demand.</em>',
       prompt: 'Use the <b>diagnosing-bugs</b> skill on issue #1. Show me a command that fails because of this bug before you change any code.',
       sub: 'If you can make it happen, you can prove it’s gone. Skip this for the obvious ones.',
-      poll: { q: 'How sure are you of the root cause now?', options: ['Low', 'Medium', 'High'] }
+      poll: { q: 'How confident are you in the root cause now?', options: ['Low', 'Medium', 'High'] }
+    },
+    {
+      name: 'backlog', part: 'Part 1',
+      kicker: 'Discussion',
+      say: 'Fine for one bug. <em>What about a whole backlog?</em>',
+      sub: 'Where does this workflow strain? What would you hand to <b>/wayfinder</b>, and what would you still want a person on?',
+      write: { q: 'How does this hold up for a backlog, not one bug?', placeholder: 'Your take' }
     },
     {
       name: 'fix', part: 'Part 1', minutes: 10,
-      kicker: 'Step 4 · Fix it, test first',
+      kicker: 'Practical 3 · Fix it, test first',
       say: 'Prove it, <em>then fix it.</em>',
       prompt: '<b>/implement</b> issue #1',
-      sub: 'It writes a test that fails, makes it pass, then reviews its own change.'
+      sub: 'It writes a test that fails, makes it pass, then reviews its own change. Before you call it done:',
+      chips: ['clicked through the flow again', 'backend starts clean', 'frontend builds clean', 'a test added or updated']
     },
     {
       name: 'why', part: 'Part 1', minutes: 5,
-      kicker: 'Step 5 · Ask why it got in',
+      kicker: 'Practical 3 · Ask why it got in',
       say: 'Don’t just fix it. <em>Stop the next one.</em>',
       prompt: '<b>/retro</b>',
       sub: 'Same session, before you clear. It suggests a check or a written rule that would have kept this bug out.'
     },
     {
-      name: 'reflect', part: 'Part 1',
+      name: 'caught', part: 'Part 1', minutes: 5,
+      kicker: 'Reflect',
+      say: 'What did the skills catch that <em>plain prompting wouldn’t?</em>',
+      sub: 'And where did they get in the way? Write yours first, then see how it lands against the room.',
+      write: { q: 'What did the skills catch that plain prompting wouldn’t have?', placeholder: 'Or where they slowed you down' }
+    },
+    {
+      name: 'again', part: 'Part 1',
       kicker: 'Reflect',
       say: 'Would you reach for these <em>on a real task?</em>',
-      poll: { q: 'Would you reach for these skills on a real task?', options: ['Definitely', 'Probably, with changes', 'Not sure', 'Probably not'] }
+      poll: { q: 'Would you reach for this skill set again on a real task?', options: ['Definitely', 'Probably, with changes', 'Not sure', 'Probably not'] }
     },
     {
       name: 'pizza', part: 'Break', scenic: true, minutes: 30, egg: true,
@@ -138,7 +194,7 @@ window.DECK = {
       sub: 'Got a question for later? Ask it on your phone, and vote up the ones you want answered.'
     },
 
-    // Part 2, Mash: about 60 minutes
+    // Part 2, Mash: hands on, so no voting
     {
       name: 'part2', part: 'Part 2', scenic: true,
       kicker: 'Part 2 · Mash',
@@ -159,9 +215,9 @@ window.DECK = {
     {
       name: 'tempting', part: 'Part 2',
       kicker: 'The tempting move',
+      promptFirst: true,
       prompt: 'add favourites to the shop',
-      say: 'It’ll run. Will it be <em>what they meant?</em>',
-      poll: { q: 'One prompt, “add favourites to the shop”. Will it be what they meant?', options: ['Yes', 'Probably', 'Doubt it', 'No chance'] }
+      say: 'It’ll run. Will it be <em>what they meant?</em>'
     },
     {
       name: 'loop', part: 'Part 2',
@@ -181,8 +237,7 @@ window.DECK = {
       kicker: 'Step 1 · Grill',
       say: 'Let it <em>interview you.</em>',
       prompt: '<b>/grill-with-docs</b> I want to add favourites to this shop: signed-in shoppers can save products and see them on a Favourites page. Keep each question short.',
-      sub: 'Answer fast. If you don’t know, say what you’d guess. It writes the words you agree into <b>GLOSSARY.md</b>. Codex: <b>$grill-with-docs</b>.',
-      poll: { q: 'How many questions has the grill asked you so far?', options: ['Under 5', '5 to 10', '11 to 20', 'More than 20'] }
+      sub: 'Answer fast. If you don’t know, say what you’d guess. It writes the words you agree into <b>GLOSSARY.md</b>. Codex: <b>$grill-with-docs</b>.'
     },
     {
       name: 'spec', part: 'Part 2', minutes: 5,
@@ -209,15 +264,22 @@ window.DECK = {
       name: 'risk', part: 'Part 2',
       kicker: 'How Anthropic reviews agent code',
       say: 'Risk decides <em>who approves.</em>',
-      tiers: [['Low', 'Docs, copy, behind a flag', '0 people'], ['Medium', 'Ordinary changes', '1 person'], ['High', 'Auth, checkout, CI', '2 people']],
-      poll: { q: 'What risk tier is your favourites PR?', options: ['Low', 'Medium', 'High'] }
+      tiers: [['Low', 'Docs, copy, behind a flag', '0 people'], ['Medium', 'Ordinary changes', '1 person'], ['High', 'Auth, checkout, CI', '2 people']]
     },
     {
       name: 'merge', part: 'Part 2', minutes: 5,
       kicker: 'Step 5 · Merge',
       say: 'You land it, <em>you own it.</em>',
-      sub: 'Read the evidence, fix what matters, merge. Then <b>/retro</b>, in the same session, to make the next run better.',
-      poll: { q: 'Where did you get to?', options: ['Merged', 'PR open', 'Still building', 'Got stuck'] }
+      sub: 'Read the evidence, fix what matters, merge. Then <b>/retro</b>, in the same session, to make the next run better.'
+    },
+
+    // Wrap-up: Raf's "beyond today", then questions and demos
+    {
+      name: 'beyond', part: 'Wrap-up',
+      kicker: 'Beyond tonight',
+      say: 'We went deep on a few. <em>Try these next.</em>',
+      cards: [['/teach', 'Turns a part of the codebase you know into a guided lesson for someone else.'], ['/wayfinder', 'Plans work too big for one session as a shared map of tickets.']],
+      poll: { q: 'Pick 1 to 3 things you’ll actually try this week.', multi: true, options: ['/teach on code I know well', '/grill-with-docs on a personal project', '/wayfinder on something too big for one sitting', 'Write a mini-skill of my own', 'Share this workshop with a teammate', 'Something else'] }
     },
     {
       name: 'qa', part: 'Q&A', qa: true,

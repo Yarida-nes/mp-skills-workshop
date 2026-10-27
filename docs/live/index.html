@@ -44,6 +44,7 @@ main { padding-block: 1.25rem 3rem; display: grid; gap: 1.25rem; }
 .opt.right { border-color: #2fb27a; }
 .opt.wrong[aria-pressed="true"] { border-color: var(--alarm); }
 .hint { font-size: .85rem; color: var(--muted); }
+.explain pre { margin: .5rem 0 0; font: 400 .8rem/1.5 var(--mono); white-space: pre-wrap; }
 .explain { background: var(--sun-soft); border-left: 4px solid var(--cta); padding: .6rem .8rem; border-radius: 0 10px 10px 0; }
 .prompt-box { position: relative; }
 .prompt-box pre { margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: 12px; padding: .9rem 1rem; font: 400 .85rem/1.55 var(--mono); white-space: pre-wrap; word-break: break-word; }
@@ -72,7 +73,7 @@ textarea { min-height: 5.5rem; resize: vertical; }
 <body>
 <header class="bar">
   <div class="wrap">
-    <a class="logo" href="../" id="logo"><img src="../brand/perth-ai-mark.webp" alt="" width="256" height="256"><span>PERTH <span>AI</span></span></a>
+    <a class="logo" href="../" id="logo"><img src="../brand/perth-ai-mark.webp" alt="" width="256" height="256"><span class="word">PERTH <span>AI</span></span><span class="event">Skills Night</span></a>
     <span class="status" id="status">connecting</span>
   </div>
 </header>
@@ -112,7 +113,7 @@ textarea { min-height: 5.5rem; resize: vertical; }
 (function () {
   var slides = DECK.slides, links = DECK.links();
   var $ = function (id) { return document.getElementById(id); };
-  var state = null, mine = { votes: {}, upped: [], asked: [] }, live = false, shownSlide = -1;
+  var state = null, mine = { votes: {}, answers: {}, upped: [], asked: [] }, live = false, shownSlide = -1;
   function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
 
@@ -139,7 +140,7 @@ textarea { min-height: 5.5rem; resize: vertical; }
     var key = i + '|' + live;
     if (key !== shownSlide) {
       shownSlide = key;
-      $('current').innerHTML = '<p class="eyebrow">' + esc(s.part) + ' · ' + s.kicker + '</p><h1>' + s.say + '</h1>' + (s.sub ? '<p class="sub">' + s.sub + '</p>' : '');
+      $('current').innerHTML = '<p class="eyebrow">' + esc(s.part) + ' · ' + s.kicker + '</p>' + ((s.poll || s.write) && live ? '' : '<h1>' + s.say + '</h1>' + (s.sub ? '<p class="sub">' + s.sub + '</p>' : ''));
       if (s.prompt) {
         $('prompt').hidden = false;
         $('prompt').innerHTML = '<pre>' + s.prompt + '</pre><p style="margin-top:.5rem"><button class="btn ghost" type="button" id="copy">Copy</button></p>';
@@ -148,7 +149,7 @@ textarea { min-height: 5.5rem; resize: vertical; }
           (navigator.clipboard ? navigator.clipboard.writeText(text) : Promise.reject()).then(function () { toast('Copied'); }, function () { toast('Press and hold to copy'); });
         };
       } else $('prompt').hidden = true;
-      if (s.qr === 'issues') $('current').insertAdjacentHTML('beforeend', '<p><a class="btn ghost" href="' + links.issues + '">Open the bug reports</a></p>');
+      if (s.link === 'issues') $('current').insertAdjacentHTML('beforeend', '<p><a class="btn ghost" href="' + links.issues + '">Open the bug reports</a></p>');
       if (s.qa) $('current').insertAdjacentHTML('beforeend', '<p><button class="btn" type="button" id="goto-qs">Ask or vote</button></p>');
       if (s.qa) $('goto-qs').onclick = function () { tab('qs'); };
       if (s.egg) $('current').insertAdjacentHTML('beforeend', '<p><a class="btn ghost" href="https://perthai.org/quokka-run">Play Quokka Run while you eat</a></p>');
@@ -156,9 +157,30 @@ textarea { min-height: 5.5rem; resize: vertical; }
     renderPoll(s);
   }
 
+  // A short written answer: one per person, editable until the slide moves on
+  function renderWrite(s) {
+    var box = $('poll'), mineText = mine.answers[s.name] || '';
+    var w = (state.walls && state.walls[s.name]) || { count: 0 };
+    var hint = (mineText ? 'Sent. Edit and send again to change it. ' : 'Answers go on screen without your name. ') + w.count + (w.count === 1 ? ' answer' : ' answers') + ' so far.';
+    if (box.dataset.write === s.name) { box.querySelector('.hint').textContent = hint; box.querySelector('.btn').textContent = mineText ? 'Update' : 'Send'; return; }
+    box.dataset.write = s.name;
+    box.innerHTML = '<h2>' + esc(s.write.q) + '</h2><textarea maxlength="200" placeholder="' + esc(s.write.placeholder || '') + '"></textarea>' +
+      '<div class="ask-row"><span class="hint"></span><button class="btn" type="button"></button></div>';
+    var ta = box.querySelector('textarea'); ta.value = mineText;
+    box.querySelector('.hint').textContent = hint; box.querySelector('.btn').textContent = mineText ? 'Update' : 'Send';
+    box.querySelector('.btn').onclick = function () {
+      var text = ta.value.trim();
+      if (!text) return;
+      if (conn.send({ type: 'answer', poll: s.name, text: text })) { mine.answers[s.name] = text; toast('Sent'); renderWrite(s); }
+      else toast('Not connected, try again in a moment');
+    };
+  }
+
   function renderPoll(s) {
     var box = $('poll');
-    if (!s.poll || !live || !state) { box.hidden = true; box.innerHTML = ''; return; }
+    if (!(s.poll || s.write) || !live || !state) { box.hidden = true; box.innerHTML = ''; box.dataset.write = ''; return; }
+    if (s.write) { box.hidden = false; renderWrite(s); return; }
+    box.dataset.write = '';
     box.hidden = false;
     var p = s.poll, my = mine.votes[s.name] || [], quiz = p.answer !== undefined;
     var revealed = Boolean(state.reveal[s.name]);
@@ -173,7 +195,7 @@ textarea { min-height: 5.5rem; resize: vertical; }
       }).join('') + '</div>';
     if (quiz && revealed) {
       var got = my.length ? (my[0] === p.answer ? 'You got it.' : 'Not this time.') : '';
-      html += '<p class="explain">' + (got ? '<b>' + got + '</b> ' : '') + p.explain + '</p>';
+      html += '<div class="explain"><p>' + (got ? '<b>' + got + '</b> ' : '') + p.explain + '</p>' + (p.code ? '<pre>' + esc(p.code) + '</pre>' : '') + '</div>';
     } else html += '<p class="hint">' + (my.length ? 'Voted. You can change it until we move on.' : (quiz ? 'Answer, then watch the screen.' : 'Tap to vote.')) + ' ' + t.voters + ' so far.</p>';
     box.innerHTML = html;
     box.querySelectorAll('.opt').forEach(function (b) {
@@ -250,9 +272,9 @@ textarea { min-height: 5.5rem; resize: vertical; }
       $('status').className = 'status live'; $('status').textContent = 'live';
       $('offline').hidden = true; $('ask-send').disabled = false;
       renderNow(); renderQuestions();
-      if (moved && slides[st.slide].poll && navigator.vibrate) navigator.vibrate([20, 60, 20]);
+      if (moved && (slides[st.slide].poll || slides[st.slide].write) && navigator.vibrate) navigator.vibrate([20, 60, 20]);
     },
-    onYou: function (m) { mine = { votes: m.votes || {}, upped: m.upped || [], asked: m.asked || [] }; if (state) { renderPoll(slides[state.slide]); renderQuestions(); } }
+    onYou: function (m) { mine = { votes: m.votes || {}, answers: m.answers || {}, upped: m.upped || [], asked: m.asked || [] }; if (state) { renderPoll(slides[state.slide]); renderQuestions(); } }
   });
   renderNow(); renderQuestions();
 })();

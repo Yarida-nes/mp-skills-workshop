@@ -43,7 +43,7 @@ select { font: 500 1rem var(--body); padding: .55rem; border-radius: 10px; borde
 <body>
 <header class="bar">
   <div class="wrap">
-    <span class="logo"><img src="../brand/perth-ai-mark.webp" alt="" width="256" height="256"><span>HOST</span></span>
+    <span class="logo"><img src="../brand/perth-ai-mark.webp" alt="" width="256" height="256"><span class="word">PERTH <span>AI</span></span><span class="event">Host</span></span>
     <span class="status" id="status">connecting</span>
   </div>
 </header>
@@ -80,7 +80,7 @@ select { font: 500 1rem var(--body); padding: .55rem; border-radius: 10px; borde
   var $ = function (id) { return document.getElementById(id); };
   function esc(t) { return String(t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
 
-  slides.forEach(function (s, i) { var o = document.createElement('option'); o.value = i; o.textContent = (i + 1) + '. ' + s.part + ': ' + s.kicker + (s.poll ? ' ●' : ''); $('jump').appendChild(o); });
+  slides.forEach(function (s, i) { var o = document.createElement('option'); o.value = i; o.textContent = (i + 1) + '. ' + s.part + ': ' + s.kicker + (s.poll || s.write ? ' ●' : ''); $('jump').appendChild(o); });
 
   function go(i) { conn.send({ type: 'goto', slide: Math.max(0, Math.min(slides.length - 1, i)) }); }
   $('prev').onclick = function () { if (state) go(state.slide - 1); };
@@ -107,6 +107,16 @@ select { font: 500 1rem var(--body); padding: .55rem; border-radius: 10px; borde
         '<button class="btn ghost" type="button" id="clear">Clear this poll</button></div>';
       if (quiz) $('reveal').onclick = function () { conn.send({ type: 'reveal', poll: s.name }); };
       $('clear').onclick = function () { if (confirm('Clear the votes on this poll?')) conn.send({ type: 'clearPoll', poll: s.name }); };
+    } else if (s.write) {
+      var w = (state.walls && state.walls[s.name]) || { count: 0, items: [] };
+      box.hidden = false;
+      box.innerHTML = '<h2>' + esc(s.write.q) + '</h2><small class="muted">' + w.count + ' on screen · newest first · hide anything that shouldn’t be up</small>' +
+        (w.items.length ? w.items.map(function (a) {
+          return '<div class="q' + (a.hidden ? ' hidden' : '') + '"><span>' + esc(a.text) + '</span><div class="row"><button class="btn ghost" type="button" data-a="' + a.id + '">' + (a.hidden ? 'Show' : 'Hide') + '</button></div></div>';
+        }).join('') : '<small class="muted">No answers yet.</small>') +
+        '<div class="row"><button class="btn ghost" type="button" id="clear">Clear these answers</button></div>';
+      box.querySelectorAll('[data-a]').forEach(function (b) { b.onclick = function () { conn.send({ type: 'hideAnswer', poll: s.name, a: b.dataset.a }); }; });
+      $('clear').onclick = function () { if (confirm('Clear the answers on this slide?')) conn.send({ type: 'clearPoll', poll: s.name }); };
     } else box.hidden = true;
 
     var qs = state.questions.concat(state.hidden || []).sort(function (a, b) { return (a.done - b.done) || (b.ups - a.ups) || (a.ts - b.ts); });

@@ -4,9 +4,9 @@ One deck for the whole night, Raf's Part 1 and Mash's Part 2, with three views:
 
 | View | URL | Who |
 | --- | --- | --- |
-| Phone | `/live/` | Everyone, from the QR on screen. Follows the projector, votes on polls, answers quick checks, asks and upvotes questions. |
+| Phone | `/live/` | Everyone, from the QR on screen. Follows the projector, votes on polls, answers quick checks, writes short answers that go up as a wall, asks and upvotes questions. |
 | Projector | `/live/screen.html?key=HOST_KEY` | The laptop on the projector. With the key, its arrow keys move every phone too. Without a key it only follows. |
-| Host remote | `/live/host.html?key=HOST_KEY` | A phone or tablet: next and back, timer, reveal answers, mark questions answered or hide them. |
+| Host remote | `/live/host.html?key=HOST_KEY` | A phone or tablet: next and back, timer, reveal answers, hide a written answer, mark questions answered or hide them. |
 
 The key is taken out of the address bar and remembered on that device, so you only open the `?key=` link once.
 

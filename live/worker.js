@@ -5,6 +5,8 @@ import { DurableObject } from 'cloudflare:workers';
 const MAX_QUESTION = 280;
 const MAX_QUESTIONS_EACH = 10;
 const MAX_NAME = 40;
+const MAX_ANSWER = 200;
+const WALL_SIZE = 40;
 
 export default {
   async fetch(request, env) {
@@ -19,7 +21,7 @@ export default {
 };
 
 function emptyState() {
-  return { slide: 0, reveal: {}, votes: {}, questions: [] };
+  return { slide: 0, reveal: {}, votes: {}, answers: {}, questions: [] };
 }
 
 export class Room extends DurableObject {
@@ -28,7 +30,7 @@ export class Room extends DurableObject {
     this.state = emptyState();
     this.pending = null;
     ctx.blockConcurrencyWhile(async () => {
-      this.state = (await ctx.storage.get('state')) || emptyState();
+      this.state = { ...emptyState(), ...(await ctx.storage.get('state')) };
     });
   }
 
@@ -67,6 +69,16 @@ export class Room extends DurableObject {
       return this.changed();
     }
 
+    // A short written answer, one per person per prompt; sending again replaces it, sending nothing withdraws it
+    if (msg.type === 'answer' && who.id && typeof msg.poll === 'string' && typeof msg.text === 'string') {
+      const text = msg.text.trim().slice(0, MAX_ANSWER);
+      s.answers[msg.poll] = s.answers[msg.poll] || {};
+      if (text) s.answers[msg.poll][who.id] = { id: crypto.randomUUID().slice(0, 8), text, ts: Date.now(), hidden: false };
+      else delete s.answers[msg.poll][who.id];
+      ws.send(JSON.stringify({ type: 'you', ...this.mine(who.id) }));
+      return this.changed();
+    }
+
     if (msg.type === 'ask' && who.id && typeof msg.text === 'string') {
       const text = msg.text.trim().slice(0, MAX_QUESTION);
       if (!text || s.questions.filter(q => q.by === who.id).length >= MAX_QUESTIONS_EACH) return;
@@ -101,14 +113,21 @@ export class Room extends DurableObject {
       if (msg.action === 'hide') q.hidden = !q.hidden;
       return this.changed();
     }
+    if (msg.type === 'hideAnswer' && typeof msg.poll === 'string' && typeof msg.a === 'string') {
+      const a = Object.values(s.answers[msg.poll] || {}).find(a => a.id === msg.a);
+      if (!a) return;
+      a.hidden = !a.hidden;
+      return this.changed();
+    }
     if (msg.type === 'clearPoll' && typeof msg.poll === 'string') {
       delete s.votes[msg.poll];
+      delete s.answers[msg.poll];
       delete s.reveal[msg.poll];
       return this.changed();
     }
     if (msg.type === 'resetAll') {
       this.state = { ...emptyState(), slide: s.slide };
-      this.broadcast({ type: 'you', votes: {}, upped: [], asked: [] }, 'phone');
+      this.broadcast({ type: 'you', votes: {}, answers: {}, upped: [], asked: [] }, 'phone');
       return this.changed();
     }
     // Timer and spotlight commands go straight to the screens, which own the countdown
@@ -127,8 +146,11 @@ export class Room extends DurableObject {
   mine(id) {
     const votes = {};
     for (const [poll, byId] of Object.entries(this.state.votes)) if (byId[id]) votes[poll] = byId[id];
+    const answers = {};
+    for (const [poll, byId] of Object.entries(this.state.answers)) if (byId[id]) answers[poll] = byId[id].text;
     return {
       votes,
+      answers,
       upped: this.state.questions.filter(q => q.up.includes(id)).map(q => q.id),
       asked: this.state.questions.filter(q => q.by === id).map(q => q.id)
     };
@@ -146,6 +168,15 @@ export class Room extends DurableObject {
       }
       tallies[poll] = { counts: Array.from(counts, n => n || 0), voters };
     }
+    // Newest answers first; the host also sees the hidden ones so they can be shown again
+    const walls = {};
+    for (const [poll, byId] of Object.entries(s.answers)) {
+      const all = Object.values(byId).sort((a, b) => b.ts - a.ts);
+      walls[poll] = {
+        count: all.filter(a => !a.hidden).length,
+        items: all.filter(a => forHost || !a.hidden).slice(0, WALL_SIZE).map(a => ({ id: a.id, text: a.text, hidden: a.hidden || undefined }))
+      };
+    }
     const questions = s.questions
       .filter(q => !q.hidden)
       .map(q => ({ id: q.id, text: q.text, name: q.name, ups: q.up.length, done: q.done, ts: q.ts }));
@@ -154,6 +185,7 @@ export class Room extends DurableObject {
       slide: s.slide,
       reveal: s.reveal,
       tallies,
+      walls,
       questions,
       hidden,
       online: this.ctx.getWebSockets('phone').length
@@ -168,7 +200,7 @@ export class Room extends DurableObject {
       this.pending = null;
       if (this.dirty) { this.dirty = false; await this.ctx.storage.put('state', this.state); }
       const state = this.publicState(true);
-      const forAll = { ...state, hidden: [] };
+      const forAll = this.publicState(false);
       for (const ws of this.ctx.getWebSockets()) {
         const who = ws.deserializeAttachment() || {};
         try { ws.send(JSON.stringify({ type: 'state', state: who.host ? state : forAll, host: who.host })); } catch {}
