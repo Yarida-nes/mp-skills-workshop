@@ -7,16 +7,34 @@ from fastapi.testclient import TestClient
 from config import settings
 from db.seed import DEMO_EMAIL, DEMO_PASSWORD
 
+LOOPBACK_HOSTS = {"127.0.0.1", "::1", "localhost"}
+
 
 @pytest.fixture(autouse=True)
 def no_network(monkeypatch):
-    """Fail any test that tries to open an outbound connection."""
+    """Fail any test that tries to open an outbound connection.
 
-    def guard(*args, **kwargs):
-        raise RuntimeError("Tests must not make network calls")
+    Loopback stays open: on Windows asyncio builds its event loop from a
+    socketpair connected over 127.0.0.1.
+    """
+    real_create_connection = socket.create_connection
+    real_connect = socket.socket.connect
 
-    monkeypatch.setattr(socket, "create_connection", guard)
-    monkeypatch.setattr(socket.socket, "connect", guard)
+    def is_loopback(address):
+        return isinstance(address, tuple) and address[0] in LOOPBACK_HOSTS
+
+    def guarded_create_connection(address, *args, **kwargs):
+        if not is_loopback(address):
+            raise RuntimeError("Tests must not make network calls")
+        return real_create_connection(address, *args, **kwargs)
+
+    def guarded_connect(sock, address):
+        if not is_loopback(address):
+            raise RuntimeError("Tests must not make network calls")
+        return real_connect(sock, address)
+
+    monkeypatch.setattr(socket, "create_connection", guarded_create_connection)
+    monkeypatch.setattr(socket.socket, "connect", guarded_connect)
 
 
 @pytest.fixture
