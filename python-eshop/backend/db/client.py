@@ -311,6 +311,32 @@ class DatabaseClient:
                 return None
             return self._load_order(conn, row)
 
+    def save_favourite(self, buyer_id: str, catalog_item_id: int) -> None:
+        saved_at = datetime.now(timezone.utc).isoformat()
+        with self._connection() as conn:
+            conn.execute(
+                """
+                INSERT INTO favourites (buyer_id, catalog_item_id, saved_at)
+                VALUES (?, ?, ?)
+                ON CONFLICT (buyer_id, catalog_item_id) DO NOTHING
+                """,
+                (buyer_id, catalog_item_id, saved_at),
+            )
+
+    def list_favourite_items(self, buyer_id: str) -> list[CatalogItem]:
+        query = """
+            SELECT ci.*, cb.brand AS brand_name, ct.type AS type_name
+            FROM favourites f
+            JOIN catalog_items ci ON ci.id = f.catalog_item_id
+            JOIN catalog_brands cb ON cb.id = ci.catalog_brand_id
+            JOIN catalog_types ct ON ct.id = ci.catalog_type_id
+            WHERE f.buyer_id = ?
+            ORDER BY f.saved_at DESC, f.id DESC
+        """
+        with self._connection() as conn:
+            rows = conn.execute(query, (buyer_id,)).fetchall()
+            return [_row_to_catalog_item(row) for row in rows]
+
     def has_catalog_data(self) -> bool:
         with self._connection() as conn:
             row = conn.execute("SELECT COUNT(*) FROM catalog_items").fetchone()

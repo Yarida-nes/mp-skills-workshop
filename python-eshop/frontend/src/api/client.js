@@ -129,4 +129,8 @@ export const api = {
     }),
   getOrders: () => request('/api/orders'),
   getOrder: (orderId) => request(`/api/orders/${orderId}`),
+
+  getFavourites: () => request('/api/favourites'),
+  saveFavourite: (catalogItemId) =>
+    request(`/api/favourites/${catalogItemId}`, { method: 'PUT' }),
 };
